@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head profile="http://www.w3.org/2005/10/profile">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="author" content="Jax">
+<meta name="email" content="weskerjax+dm@gmail.com">
+<meta name="website" content="http://jax-work-archive.blogspot.com/">
+<link href="https://sites.google.com/site/weskerjax/material/jax_logo.ico" type="image/ico" rel="shortcut icon" />
+<link href="https://sites.google.com/site/weskerjax/material/jax_logo.png" type="image/png" rel="icon" />
+<title>利用物件的方式設定事件</title>
+<style type="text/css">
+<!--
+/*-- (按鈕樣式) -----------------------------------*/
+#s_but {
+	text-align:center;
+	vertical-align:middle;
+	cursor:pointer;
+	border-width: 2px;
+	border-style: outset;
+	padding: 2px;
+	font-size: 10pt;
+}
+-->
+</style>
+</head>
+
+<body>
+<fieldset style="margin:1em;padding:1em;">
+	<legend>利用物件的方式設定事件</legend><br>
+	<span name="s_but" id="s_but" onclick="alert('按鈕1 OK')">按鈕1</span> &nbsp; 
+	<span name="s_but" id="s_but" onclick="alert('按鈕2 OK')">按鈕2</span> &nbsp; 
+	<span name="s_but" id="s_but" onclick="alert('按鈕3 OK')">按鈕3</span>
+</fieldset>
+
+</body>
+
+<!-- JavaScript 必須寫在網頁後面，由於必須先讓瀏覽器建立 DOM 物件，這樣 JavaScript 才找的到物件-->
+<script language="JavaScript" type="text/javascript">
+<!--
+/* 取得所有名稱為 s_but 的物件群組 */
+var spanButtons = document.getElementsByName("s_but");
+
+/* 設定群組中每一個物件的事件 */
+for(var i=0; i<spanButtons.length; i++){
+	/* 設定當滑鼠按下時的事件函數 */
+	spanButtons[i].onmousedown = downChange;
+	/* 設定當滑鼠重疊時的事件函數 */	
+	spanButtons[i].onmouseover = overChange;
+	/* 設定當滑鼠離開時的事件函數 */
+	spanButtons[i].onmouseout = outChange;
+}
+
+/*Down Change*/
+function downChange(){
+	this.style.borderStyle="inset"; 
+	this.style.backgroundColor="#EEDDDD"; }
+
+/*Out Change*/
+function outChange(){ 
+	this.style.borderColor=""; 
+	this.style.borderStyle="outset"; 
+	this.style.backgroundColor="#FFFFFF"; }
+
+/*Over Change*/
+function overChange(){ 
+	this.style.borderColor="#FF0000"; }
+//-->
+</script>
+</html>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1497692-16");
+pageTracker._trackPageview();
+} catch(err) {}</script>

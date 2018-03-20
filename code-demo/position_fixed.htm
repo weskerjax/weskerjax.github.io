@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head profile="http://www.w3.org/2005/10/profile">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="author" content="jax">
+		<meta name="history" content="2008/10/04">
+		<meta name="email" content="weskerjax+dm@gmail.com">
+		<meta name="website" content="http://jax-work-archive.blogspot.com/">
+		<link href="https://sites.google.com/site/weskerjax/material/jax_logo.ico" type="image/ico" rel="shortcut icon" />
+		<link href="https://sites.google.com/site/weskerjax/material/jax_logo.png" type="image/png" rel="icon" />
+
+		<title>CSS fixed 定位</title>
+        <style>
+            body{
+                height:1200px;
+                background:url(nothing.txt) white fixed; /* prevent screen flash in IE6 */
+            }
+            div{
+                background:#FF0066;
+                border:4px solid #FF9999;
+            }
+            
+/* 水平置中 */
+            .fixed-center{
+                width:100px;
+                height:100px;
+                position:fixed;
+                top:50%;
+                left:50%;
+                margin-top:-52px;
+                margin-left:-52px;
+                
+                /* position fixed for IE6 */
+                _position: absolute; 
+                _margin-top:0;
+                _top:expression( documentElement.scrollTop + ( documentElement.clientHeight-this.offsetHeight )/2 );
+            }
+            .fixed-top-center{
+                width:100px;
+                height:100px;
+                position:fixed;
+                top:0;
+                left:50%;
+                margin-left:-52px;
+                
+                /* position fixed for IE6 */
+                _position: absolute; 
+                _top:expression(documentElement.scrollTop);
+            }
+            .fixed-bottom-center{
+                width:100px;
+                height:100px;
+                position:fixed;
+                
+                bottom:0;
+                left:50%;
+                margin-left:-52px;
+                
+                /* position fixed for IE6 */
+                _position: absolute; 
+                _top:expression( documentElement.scrollTop + documentElement.clientHeight-this.offsetHeight );
+            }
+            
+/* 水平置左 */
+            .fixed-center-left{
+                width:100px;
+                height:100px;
+                position:fixed;
+                top:50%;
+                left:0;
+                margin-top:-52px;
+                
+                /* position fixed for IE6 */
+                _position: absolute; 
+                _top:expression( documentElement.scrollTop + ( documentElement.clientHeight-this.offsetHeight )/2 );
+                _margin-top:0;
+            }
+            .fixed-top-left{
+                width:100px;
+                height:100px;
+                position:fixed;
+                top:0;
+                left:0;
+                
+                /* position fixed for IE6 */
+                _position: absolute; 
+                _top:expression(documentElement.scrollTop);
+            }
+            .fixed-bottom-left{
+                width:100px;
+                height:100px;
+                position:fixed;
+                
+                bottom:0;
+                left:0;
+                
+                /* position fixed for IE6 */
+                _position: absolute; 
+                _top:expression( documentElement.scrollTop + documentElement.clientHeight-this.offsetHeight );
+            }
+            
+/* 水平置右 */
+            .fixed-center-right{
+                width:100px;
+                height:100px;
+                position:fixed;
+                top:50%;
+                right:0;
+                margin-top:-52px;
+                
+                /* position fixed for IE6 */
+                _position: absolute; 
+                _top:expression( documentElement.scrollTop + ( documentElement.clientHeight-this.offsetHeight )/2 );
+                _margin-top:0;
+            }
+            .fixed-top-right{
+                width:100px;
+                height:100px;
+                position:fixed;
+                top:0;
+                right:0;
+                
+                /* position fixed for IE6 */
+                _position: absolute; 
+                _top:expression(documentElement.scrollTop);
+            }
+            .fixed-bottom-right{
+                width:100px;
+                height:100px;
+                position:fixed;
+                
+                bottom:0;
+                right:0;
+                
+                /* position fixed for IE6 */
+                _position: absolute; 
+                _top:expression( documentElement.scrollTop + documentElement.clientHeight-this.offsetHeight );
+            }
+            
+            
+        </style>
+	</head>
+	<body>
+    <div class="fixed-center">center</div>
+    <div class="fixed-top-center">top center</div>
+    <div class="fixed-bottom-center">bottom center</div>
+
+    <div class="fixed-center-left">center left</div>
+    <div class="fixed-top-left">top left</div>
+    <div class="fixed-bottom-left">bottom left</div>
+    
+    <div class="fixed-center-right">center right</div>
+    <div class="fixed-top-right">top right</div>
+    <div class="fixed-bottom-right">bottom right</div>
+    
+    
+	</body>
+</html>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1497692-16");
+pageTracker._trackPageview();
+} catch(err) {}</script>

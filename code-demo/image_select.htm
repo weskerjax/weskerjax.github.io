@@ -1,0 +1,269 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head profile="http://www.w3.org/2005/10/profile">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="author" content="jax">
+		<meta name="history" content="2008/11/15">
+		<meta name="email" content="weskerjax+dm@gmail.com">
+		<meta name="website" content="http://jax-work-archive.blogspot.com/">
+		<link href="https://sites.google.com/site/weskerjax/material/jax_logo.ico" type="image/ico" rel="shortcut icon" />
+		<link href="https://sites.google.com/site/weskerjax/material/jax_logo.png" type="image/png" rel="icon" />
+		<title>圖片裁切選取</title>
+        <style>
+        #main{
+            width:400px;
+            height:400px;
+            overflow:hidden;
+            position:relative;
+            cursor:pointer;
+            cursor:hand;
+        }
+        .filter{
+        	opacity:0.6;
+        	background:#000;
+        	filter:alpha(opacity=60);/* IE6 */
+            position:relative;
+            z-index:2;
+        }
+        #top{
+        	height:99px;
+        }
+        #left{
+            float:left;
+            width:99px;
+        	height:202px;
+        }
+        #center{
+            float:left;
+            width:200px;
+        	height:200px;
+            border:1px solid #00f;
+            position:relative;
+            z-index:2;
+        }
+        #right{
+            float:left;
+            width:99px;
+        	height:202px;
+        }
+        #bottom{
+            clear:both;
+        	height:99px;
+        }
+        #img{
+            top:0;
+            left:0;
+            position:absolute;
+            z-index:1;
+        }
+        
+        </style>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/mootools/1.11/mootools.js"></script>
+	</head>
+	<body>
+    <p>請用滾輪及拖移方式選擇你要圖片</p>
+    <div id="main">
+        <img id="img" src="http://lh5.ggpht.com/_b8lN_UbLoEc/SR6Rm5sbfNI/AAAAAAAAB14/EYQgMFJy2cg/wallp_kaimaku_3.jpg"/>
+        <div id="top" class="filter"></div>
+        <div id="left" class="filter"></div>
+        <div id="center">
+        </div>
+        <div id="right" class="filter"></div>
+        <div id="bottom" class="filter"></div>
+    </div>
+    <input type="button" value="reset src" onclick="$('img').src='http://lh5.ggpht.com/_b8lN_UbLoEc/SR6XP4QLgaI/AAAAAAAAB2A/kvi7hyXjQSA/wallp_kaimaku_2.jpg';" />
+    <div id="print"></div>
+
+    
+    <script>
+        Element.Events.extend({
+        	'wheelup': {
+        		type: Element.Events.mousewheel.type,
+        		map: function(event){
+        			event = new Event(event);
+        			if (event.wheel >= 0) this.fireEvent('wheelup', event)
+        		}
+        	},
+         
+        	'wheeldown': {
+        		type: Element.Events.mousewheel.type,
+        		map: function(event){
+        			event = new Event(event);
+        			if (event.wheel <= 0) this.fireEvent('wheeldown', event)
+        		}
+        	}
+        });
+
+
+
+        var ImageSelect = new Class({
+            El:null,
+            drag:null,
+            sourceW:0,
+            sourceH:0,
+            center:0,
+            offset:0,
+            
+            options : {
+                rate:0.05, /*縮放比*/
+                boxSize:200,
+                borderSize:100,
+                handle:''
+        	},
+           initialize: function(imgId,options) {
+                this.setOptions(options);
+                
+                var op=this.options;
+                this.el=$(imgId);
+                this.center=(op.boxSize/2)+op.borderSize;/*邊界至中心點的偏移量*/
+                this.offset=op.boxSize+op.borderSize;/*右邊界的偏移量*/
+                
+                if(!op.handle){op.handle=imgId;}
+                this.drag=new Drag.Base(imgId,{'handle':op.handle});
+                
+                
+                this.el.addEvent('load',function(){
+                    var op=this.options;
+                    this.el.removeProperty('width');/*删除 width 屬性*/
+                    this.el.removeProperty('height');/*删除 height 屬性*/
+                    /*記錄原始大小*/
+                	this.sourceW=this.el.width;
+                	this.sourceH=this.el.height;
+                    
+                    /*設定圖片初始大小*/
+                    if(this.sourceW<this.sourceH){
+                        this.el.width=op.boxSize;
+                        this.el.height=((this.sourceH*op.boxSize)/this.sourceW);
+                    }else{
+                        this.el.height=op.boxSize;
+                        this.el.width=((this.sourceW*op.boxSize)/this.sourceH);
+                    }
+                    /*設定圖片初始定位*/
+                    this.el.style.left=op.borderSize+'px';
+                    this.el.style.top=op.borderSize+'px';
+                    /*設定圖片拖移範圍*/
+                    this.drag.options.limit={
+                        'x':[-this.el.width+this.offset,op.borderSize],
+                        'y':[-this.el.height+this.offset,op.borderSize]
+                    };
+                }.bind(this));
+                $(op.handle).addEvents({
+                    'mousedown': function(){this.setStyle('cursor', 'move');},
+                    'mouseup': function(){this.setStyle('cursor', 'pointer');},
+                    /*滾輪向上捲動事件處理*/
+                    'wheelup': function(e) {
+                		e = new Event(e).stop();
+                        var op=this.options;
+                        
+                        /*計算放大後的 Size*/
+                		var w=this.el.width*(1+op.rate);
+                        var h=(this.sourceH*w)/this.sourceW;
+                        
+                        /*檢查放大上限*/
+                        if(w>=this.sourceW || h>=this.sourceH){
+                            w=this.sourceW;h=this.sourceH;
+                        }
+                        /*處理中心點定位*/
+                        var top=this.el.style.top.toInt();
+                        var left=this.el.style.left.toInt();
+                        var psH=(this.center-top)/this.el.height;
+                        var psW=(this.center-left)/this.el.width;
+                        this.el.style.top=(top+(this.el.height-h)*psH)+'px';
+                        this.el.style.left=(left+(this.el.width-w)*psW)+'px';
+                        
+                        /*設定圖片大小*/
+                        this.el.height=h;
+                        this.el.width=w;
+                        /*設定圖片拖移範圍*/
+                        this.drag.options.limit={
+                            'x':[-this.el.width+this.offset,op.borderSize],
+                            'y':[-this.el.height+this.offset,op.borderSize]
+                        };
+                	}.bind(this),
+                    
+                    /*滾輪向下捲動事件處理*/
+                    'wheeldown':function(e) {
+                		e = new Event(e).stop();
+                        var op=this.options;
+                        
+                        /*計算放大後的 Size*/
+                		var w=this.el.width/(1+op.rate);
+                        var h=(this.sourceH*w)/this.sourceW;
+                        
+                        /*檢查放大下限*/
+                        if(w<op.boxSize){
+                            w=op.boxSize;h=(this.sourceH*op.boxSize)/this.sourceW;
+                        }
+                        if(h<op.boxSize){h=op.boxSize;
+                            w=(this.sourceW*op.boxSize)/this.sourceH;
+                        }
+                        /*處理中心點定位*/
+                        var top=this.el.style.top.toInt();
+                        var left=this.el.style.left.toInt();
+                        var psH=(this.center-top)/this.el.height;
+                        var psW=(this.center-left)/this.el.width;
+                        top=top+(this.el.height-h)*psH;
+                        left=left+(this.el.width-w)*psW;
+                        
+                        /*設定圖片大小*/
+                        this.el.height=h;
+                        this.el.width=w;
+                        
+                        /*處理圖片定位限制*/
+                        if(left>op.borderSize){left=op.borderSize;
+                        }else if((this.el.width+left)<this.offset){left=this.offset-this.el.width;}
+                        if(top>op.borderSize){top=op.borderSize;
+                        }else if((this.el.height+top)<this.offset){top=this.offset-this.el.height;}
+                        
+                        this.el.style.top=top+'px';
+                        this.el.style.left=left+'px';
+                        /*設定圖片拖移範圍*/
+                        this.drag.options.limit={
+                            'x':[-this.el.width+this.offset,op.borderSize],
+                            'y':[-this.el.height+this.offset,op.borderSize]
+                        };
+                	}.bind(this)
+                });    
+            },
+            /*取得選取範圍*/
+            getSelectSize:function(){
+                var op=this.options;
+                /*計算目前縮放比*/
+                if(this.sourceW<this.sourceH){
+                    var r=this.sourceW/this.el.width;
+                }else{
+                    var r=this.sourceH/this.el.height;
+                }
+                
+                var y=((op.borderSize-this.el.style.top.toInt())*r).toInt();
+                var x=((op.borderSize-this.el.style.left.toInt())*r).toInt();
+                var w=(op.boxSize*r).toInt();
+                var h=(op.boxSize*r).toInt();
+                
+                return {'w':w, 'h':h, 'x':x, 'y':y};
+            }
+        });
+        ImageSelect.implement(new Options());
+        
+        
+        
+        var imgSel=new ImageSelect('img',{handle:'main'});
+        
+        $('center').addEvent('dblclick',function(){
+            var size=imgSel.getSelectSize();
+            $('print').innerHTML='w='+size.w+',h='+size.h+',x='+size.x+',y='+size.y;
+        });
+            
+    </script>
+    
+	</body>
+</html>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1497692-16");
+pageTracker._trackPageview();
+} catch(err) {}</script>

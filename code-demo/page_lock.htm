@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head profile="http://www.w3.org/2005/10/profile">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="jax">
+    <meta name="history" content="2008/12/6">
+    <meta name="email" content="weskerjax+dm@gmail.com">
+    <meta name="website" content="http://jax-work-archive.blogspot.com/">
+	<link href="https://sites.google.com/site/weskerjax/material/jax_logo.ico" type="image/ico" rel="shortcut icon" />
+	<link href="https://sites.google.com/site/weskerjax/material/jax_logo.png" type="image/png" rel="icon" />
+	<title>頁面離開前的確認匡</title>
+</head>
+<body>
+<script>
+var msg='是否要離開此頁面??';
+window.onbeforeunload=function(){return msg;};
+</script>
+
+<h2>頁面離開前的確認匡</h2>
+<input id="msg_text" type="text" value="是否要離開此頁面??"/>    
+<input type="button" value="變更提示訊息" onclick="msg=document.getElementById('msg_text').value;"/>  
+<input type="button" value="取消對話匡" onclick="msg=undefined;"/>
+<p>試著重新整理頁面</p>
+</body>
+</html>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1497692-16");
+pageTracker._trackPageview();
+} catch(err) {}</script>

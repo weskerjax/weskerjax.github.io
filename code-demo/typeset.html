@@ -1,0 +1,203 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head profile="http://www.w3.org/2005/10/profile">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>排版 Demo</title>
+		<meta name="author" content="jax"/>
+		<meta name="email" content="weskerjax+dm@gmail.com"/>
+		<meta name="website" content="http://jax-work-archive.blogspot.com/"/>
+		<link href="https://sites.google.com/site/weskerjax/material/jax_logo.ico" type="image/ico" rel="shortcut icon" />
+		<link href="https://sites.google.com/site/weskerjax/material/jax_logo.png" type="image/png" rel="icon" />
+		<style>
+			p {padding:200px 0;margin:0;text-align:center;background:#ffffff;}
+			hr {margin:40px 0;}
+			
+			#demo_1 {
+				width:900px; 
+				margin:0 auto;
+			}
+			#demo_1 .sidebar-L{
+				width:200px;
+				float:left;
+			}
+			#demo_1 .main{
+				width:500px;
+				float:left;
+			}
+			#demo_1 .sidebar-R{
+				width:200px;
+				float:left;
+			}
+			#demo_1 .clear{
+				clear:both;
+				border:2px solid #ff0000;
+				text-align:center;
+			}
+			#demo_1 p{
+				border:2px solid #1e90ff;
+			}
+			
+			#demo_2 {
+				width: 100%;
+			}
+			#demo_2 .sidebar-L {
+				width: 200px;
+			}
+			#demo_2 .main {}
+			#demo_2 .sidebar-R {
+				width: 200px;
+			}
+			#demo_2 p{
+				border:2px solid #286228;
+			}
+			
+			#demo_3 {
+				width: 100%;
+				background:#bfbfbf;
+			}
+			#demo_3 .sidebar-L {
+				width: 200px;
+				float: left;
+			}
+			#demo_3 .main {
+				margin: 0 200px;
+			}
+			#demo_3 .sidebar-R {
+				width: 200px;
+				float: right;
+			}
+			#demo_3 .main p{
+				border:2px solid #ff0000;
+				padding:300px 0;
+			}
+			#demo_3 p{
+				border:2px solid #1e90ff;
+			}
+
+			#demo_4 {
+				width: 100%;
+				position: relative;
+				background:#bfbfbf;
+			}
+			#demo_4 .sidebar-L {
+				width: 200px;
+				position: absolute;
+				left: 0;
+			}
+			#demo_4 .main {
+				margin: 0 200px;
+				_border:1px solid #ff0000;
+			}
+			#demo_4 .sidebar-R {
+				width: 200px;
+				position: absolute;
+				right: 0;
+			}
+			#demo_4 .main p{
+				border:2px solid #ff0000;
+				padding:300px 0;
+			}
+			#demo_4 p{
+				border:2px solid #0000ff;
+			}
+			
+			* html #demo_5{
+				height: 1%;
+			}
+			#demo_5:after {
+				content: ".";
+				display: block;
+				height: 0;
+				clear: both;
+				visibility: hidden;
+			}
+			#demo_5 {
+				zoom: 1;
+				padding: 0 200px;
+			}
+			
+			#demo_5 .sidebar-L{
+				width:200px;
+				float:left;
+				margin-left:-200px;
+				_margin-left:-100px;
+				z-index:10px;				
+			}
+			#demo_5 .main{
+				width:100%;
+				float:left;
+			}
+			#demo_5 .sidebar-R{
+				width:200px;
+				float:right;
+				margin-right:-200px;
+				_margin-right:-100px;
+				z-index:10;			
+			}
+			#demo_5 .clear{
+				clear:both;
+				border:2px solid #ff0000;
+				text-align:center;
+			}
+			#demo_5 p{
+				border:2px solid #1e90ff;
+			}
+			
+		</style>
+	</head>
+	<body>
+	<h2>float</h2>	
+	<div id="demo_1">
+		<div class="sidebar-L"><p>Float</p></div>
+		<div class="main"><p>Float</p></div>
+		<div class="sidebar-R"><p>Float</p></div>
+		<div class="clear">clear:both;</div>
+	</div>	
+	<hr/>
+	<h2>table</h2>	
+	<table id="demo_2" cellpadding=0 cellspacing=0>
+	  <tr>
+		<td class="sidebar-L"><p>td</p></td>
+		<td class="main"><p>td</p></td>
+		<td class="sidebar-R"><p>td</p></td>
+	  </tr>
+	</table>
+	<hr/>
+	<h2>margin and float</h2>	
+	<div id="demo_3">
+		<div class="sidebar-L"><p>Float</p></div>
+		<div class="sidebar-R"><p>Float</p></div>
+		<div class="main"><p>margin : 0 200px;</p></div>
+	</div>	
+	
+	<hr/>
+	
+	<h2>margin and position</h2>	
+	<div id="demo_4">
+		<div class="sidebar-L"><p>position:absolute;</p></div>
+		<div class="sidebar-R"><p>position:absolute;</p></div>
+		<div class="main"><p>margin : 0 200px;</p></div>
+	</div>	
+	
+	<hr/>
+	
+	<h2>padding and float</h2>	
+	<div id="demo_5">
+		<div class="sidebar-L"><p>float L</p></div>
+		<div class="sidebar-R"><p>float R</p></div>
+		<div class="main"><p>float</p></div>
+	</div>	
+		
+	<hr/>
+	
+	</body>
+</html>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1497692-16");
+pageTracker._trackPageview();
+} catch(err) {}</script>

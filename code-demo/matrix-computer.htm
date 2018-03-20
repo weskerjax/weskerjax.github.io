@@ -1,0 +1,458 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head profile="http://www.w3.org/2005/10/profile">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="author" content="jax">
+<meta name="email" content="weskerjax+dm@gmail.com">
+<meta name="website" content="http://jax-work-archive.blogspot.com/">
+<link href="https://sites.google.com/site/weskerjax/material/jax_logo.ico" type="image/ico" rel="shortcut icon" />
+<link href="https://sites.google.com/site/weskerjax/material/jax_logo.png" type="image/png" rel="icon" />
+<title>線性代數-矩陣運算</title>
+
+<script language="JavaScript" type="text/javascript">
+<!--
+// JavaScript Document
+var mat_y=0, mat_x=0;
+var mat;
+var rrefMat;
+var imageMat, kernelMat;
+var matrixType;
+
+var Q_Mat, R_Mat;
+
+var det, inverMat;
+
+
+/*==================================================================================================
+  產生所需要的矩陣欄位*/
+function setMatrix() {
+	if(isNaN(document.form1.textY.value) || isNaN(document.form1.textX.value)){
+		alert("請輸入數字");
+		return false;
+	}
+		
+	mat_y = parseInt(document.form1.textY.value);
+	mat_x = parseInt(document.form1.textX.value);
+	if(mat_y==0 || mat_x==0 || document.form1.textX.value=='' || document.form1.textY.value==''){
+		return false;}
+	
+	var j,i;
+	var table='<table border=0 cellspacing=1 cellpadding=3>';//表格設定
+	for(i=0;i<=mat_y;i++){
+		table+='<tr>';
+		
+		if(i==0){
+			for(j=0;j<=mat_x;j++){
+				if(j==0){table+='<td>&nbsp;</td>';}
+				else{table+='<td>'+j+'</td>';}
+			}
+		}
+		
+		else{
+			for(j=0;j<=mat_x;j++){
+				if(j==0){table+='<td>'+i+'</td>';}
+				else{table+='<td><input name=\"text_'+i+'_'+j+'\" type=\"text\" size=\"10\"></td>';}//欄位設定
+			}
+		}
+		
+		table+='</tr>';
+	}
+	table+='</table><div align=\"center\"><input type=\"button\" value=\"開始計算\" onClick=\'document.getElementById(\"output\").innerHTML=\"\";main();\'></div><hr>';
+	//document.all("input").innerHTML=table;
+	document.getElementById("input").innerHTML=table;
+}
+
+
+/*讀取文字方塊的數字
+  呼叫計算函數*/
+function main(){
+	if(mat_y==0 ||mat_x==0){return false;}
+	
+	mat = newMatrix(mat_y,mat_x);
+	rrefMat = newMatrix(mat_y,mat_x);
+	var j,i;
+	
+	for(i=0;i<mat_y;i++){
+		for(j=0;j<mat_x;j++){			
+			var text = document.form2.elements[i*mat_x+j].value;
+			if(isNaN(text)){ alert("請輸入數字"); return false; }
+			else if(text == ''){
+				mat[i][j]=parseFloat(0);
+				rrefMat[i][j]=mat[i][j];
+			}
+				
+			else{
+				mat[i][j] = parseFloat(text);
+				rrefMat[i][j]=mat[i][j];
+			}
+				
+
+		}
+		
+	}
+	rref(rrefMat);
+	matrixType=imageAndKernel(mat,rrefMat);
+	
+	if(matrixType){
+		gramSchmidt(mat);
+	}
+	
+	menu(matrixType);
+	
+	
+}
+
+
+/*====================================================================================================
+  產生計算結果選項
+  經由選項呼叫函數*/
+function menu(type){
+	var out=''; 
+	
+	if(type){out += '<h2>(線性獨立)</h2>';}
+	else{out += '<h2>(線性相依)</h2>';}
+	
+	
+	out += '&lt;<a href=\"#\" onClick=\'matPrint(mat,\"Matrix\")\'>Matrix</a>&gt; ';
+	out += '&lt;<a href=\"#\" onClick=\'matPrint(rrefMat,\"RREF Matrix\")\'>RREF</a>&gt; ';
+	out += '&lt;<a href=\"#\" onClick=\'matPrint(imageMat,\"Image Matrix\")\'>Image</a>&gt; ';
+	out += '&lt;<a href=\"#\" onClick=\'matPrint(kernelMat,\"Kernel Matrix\")\'>Kernel</a>&gt; ';
+	
+	out += '<p>';
+	if(type){
+		out += '&lt;<a href=\"#\" onClick=\'GramSchmidtPrint()\'>Gram-Schmidt</a>&gt; ';
+		
+		if(mat_x==mat_y){
+			out += '&lt;<a href=\"#\" onClick=\'matPrint(inverMat,\"Invertible Matrix\")\'>Invertible</a>&gt; ';
+			out += '&lt;<a href=\"#\" onClick=\'detPrint()\'>Determinants</a>&gt; ';
+		}
+	}
+	
+	out += '<p>';
+	out += '&lt;<a href=\"#\" onClick=\'allPrint()\'>全部印出</a>&gt; ';
+	
+	out+='<hr>';
+	document.getElementById("menu").innerHTML=out;
+}
+
+
+
+/*輸入矩陣大小，產生一個二維矩陣*/
+function newMatrix(y,x){
+	var newMat=new Array(y);
+	for(var i = 0; i < y; i++){ 
+		newMat[i]=new Array(x); 
+		for(var j=0; j<x; j++){newMat[i][j]=0;}
+	}
+	return newMat;
+}
+
+ -->
+</script>
+
+
+
+<noscript>您的瀏覽器不支援 javascript,<a href="http://www.java.com/zh_TW/download/windows_automatic.jsp" title="如果需要最新版本的JAVA請按此進入下載">如果需要最新版本的JAVA請按此進入下載</a></noscript>
+
+<script language="JavaScript" type="text/javascript">
+<!--
+// JavaScript Document
+
+/**===<<Double non Zero>>==============================================================
+ * 浮點數的判斷-是否不等於零
+ */
+function nZero(a){
+	var ABS = Math.abs(a);
+	if(Math.max(ABS,0.0000001)==0.0000001){a=0; return false;}
+	else{return true;}
+}
+/*###(以下為計算的函數)###############################################################*/	
+/**===<<rref>>=======================================================================*/
+/*高斯消去法*/
+function rref(matrix){
+	var x=0, y=0, i, j;
+	var mat_y=matrix.length;
+	var mat_x=matrix[0].length;
+	
+	if(mat_x == mat_y){
+		inverMat = newMatrix(mat_x,mat_x);
+		for(i=0; i<mat_x; i++){inverMat[i][i]=1;}
+		
+		det=1;
+		
+	/*------Searching-Data!=0-----*/
+		do{
+			while(x<mat_x){
+				if(nZero(matrix[y][x])){break;}
+				for(j=y+1;j<mat_y;j++){
+					if(nZero(matrix[j][x])){
+						det*=(-1);
+						var temp;
+						temp=matrix[j]; matrix[j]=matrix[y];  matrix[y]=temp;//與首值不為零的交換。
+						temp=inverMat[j]; inverMat[j]=inverMat[y];  inverMat[y]=temp;
+		
+						break;
+					}	
+				}
+				if(j>=mat_y){ x++; }
+			}
+			if(x>=mat_x){break;}
+	
+			
+	/*------Science-1--------------*/	
+			det*=matrix[y][x];	
+			temp=matrix[y][x];
+			for(i=0; i<mat_x; i++){
+				inverMat[y][i]=inverMat[y][i]/temp;
+				matrix[y][i]=matrix[y][i]/temp;
+			}
+	
+			for(j=0;j<mat_y;j++){
+				if(j!=y && nZero(matrix[j][x])){
+					temp=matrix[j][x];
+					for(i=0; i<mat_x; i++){
+						inverMat[j][i]=inverMat[j][i]-inverMat[y][i]*temp;
+						matrix[j][i]=matrix[j][i]-matrix[y][i]*temp;
+					}
+				}
+			}
+			x++;  y++;
+	
+		}while(x<mat_x && y<mat_y);
+	}
+
+
+/*-------------------------------------------------------------*/
+	else{
+			/*------Searching-Data!=0-----*/
+		do{
+			while(x<mat_x){
+				if(nZero(matrix[y][x])){break;}
+				for(j=y+1;j<mat_y;j++){
+					if(nZero(matrix[j][x])){
+						var temp;
+						temp=matrix[j]; matrix[j]=matrix[y];  matrix[y]=temp;//與首值不為零的交換。
+						break;
+					}	
+				}
+				if(j>=mat_y){ x++; }
+			}
+			if(x>=mat_x){break;}
+	
+			
+	/*------Science-1--------------*/		
+			for(i=mat_x-1;i>=x;i--){matrix[y][i]=matrix[y][i]/matrix[y][x];}
+	
+			for(j=0;j<mat_y;j++){
+				if(j!=y && nZero(matrix[j][x])){
+					for(i=mat_x-1;i>=x;i--){matrix[j][i]=matrix[j][i]-matrix[y][i]*matrix[j][x];}
+				}
+			}
+			x++;  y++;
+	
+		}while(x<mat_x && y<mat_y);
+	}
+}
+
+
+/**===<<Image and Kernel>>=============================================================
+*/
+function imageAndKernel(mat,rref){
+	var mat_y = mat.length;
+	var mat_x = mat[0].length;
+	var x=0,y=0;
+	var leadOne = new Array(mat_y);
+	var ker = new Array(mat_x);
+	var i;//,j,le=0,ker=0; kernel[0]=0;
+	
+/*--(搜尋 RREF 矩陣)----------------------------------------------------------------*/
+	for(i=0; i<mat_y; i++){leadOne[i]=mat_x-1;}
+	
+	ker[0]=0;
+	while(x<mat_x && y<mat_y){
+		if(rref[y][x]<1.000001 && rref[y][x]>0.999999){
+			leadOne[y]=x;
+			x++; y++; 
+		}
+			
+		else{
+			if(y!=0){
+				ker[0]++;
+				ker[ker[0]]=x;
+			}
+			x++;
+		}
+	}/*end of while*/
+
+/*--(產生 Image 矩陣)----------------------------------------------------------------*/
+	imageMat = newMatrix(mat_y,mat_x-ker[0]);/*imageMat 為全域變數*/
+	for(x=0; x<imageMat[0].length; x++){
+		for(y=0; y<mat_y; y++){
+			imageMat[y][x]=mat[y][leadOne[x]];
+		}
+	}
+
+/*--(產生 Kernel 矩陣)---------------------------------------------------------------*/
+	if(ker[0]==0){
+		kernelMat = newMatrix(1,1);/*kernelMat 為全域變數*/
+		kernelMat[0][0]=0;
+		return true;
+	}
+	else{
+		kernelMat = newMatrix(mat_x,ker[0]);/*kernelMat 為全域變數*/
+		for(x=0; x<ker[0]; x++){
+			for(y=0; y<mat_y; y++){
+				kernelMat[leadOne[y]][x]=rref[y][ker[x+1]]*(-1);
+			}
+			kernelMat[ker[x+1]][x]=1;
+		}
+		return false;
+	}
+}
+
+
+/**===<<Gram-Schmidt>>==============================================================
+*/
+function gramSchmidt(mat){
+	var i,j,k;
+	var mat_y = mat.length;
+	var mat_x = mat[0].length;
+	var temp = new Array(mat_y);
+	var pow;
+	
+	Q_Mat = newMatrix(mat_y,mat_x);
+	R_Mat = newMatrix(mat_x,mat_x);
+	
+	for(i=0; i<mat_x; i++){
+		pow=0;
+		
+		/* temp[] of zero */
+		for(j=0; j<mat_y; j++){ temp[j]=0; }
+		
+		/*----求R的內積部分 and 求Proj(x)的值------------------*/
+		for(j=0; j<i; j++){
+			for(k=0; k<mat_y; k++){/* R的內積部分 */
+				R_Mat[j][i] += (Q_Mat[k][j]*mat[k][i]); }
+			
+			for(k=0; k<mat_y; k++){/* Proj(x) */
+				temp[k] += (R_Mat[j][i]*Q_Mat[k][j]); }
+		}
+		
+		/* V - Proj(x)*/
+		for(k=0; k<mat_y; k++){
+			Q_Mat[k][i] = mat[k][i]-temp[k];	
+			pow += (Q_Mat[k][i]*Q_Mat[k][i]);  }
+		
+		R_Mat[i][i] = Math.sqrt(pow);/*開平方根*/
+		
+		/* 計算 U 的值 */
+		for(k=0; k<mat_y; k++){
+			Q_Mat[k][i]/=R_Mat[i][i];
+		}
+		
+	}
+}
+
+
+ -->
+</script>
+
+<script language="JavaScript" type="text/javascript">
+<!--
+// JavaScript Document
+/*======================================================================================================
+  輸入矩陣和大小，產生用表格表示的字串*/
+function matToTable(outMat,str){
+	var j,i;
+	var table='<center>'+str+'</center>';//表格標題
+	table+='<table border=0 cellspacing=1 cellpadding=3>';//表格設定
+	
+	for(i=0;i<outMat.length;i++){
+		table+='<tr>';
+		for(j=0;j<outMat[0].length;j++){
+			table+='<td>'+outMat[i][j]+'</td>';	}
+		table+='</tr>';
+	}
+	table+='</table>';
+	return table;
+}
+
+/*=====================================================================================================
+  列出矩陣*/
+function matPrint(a,str){
+	var out = matToTable(a,str);
+	document.getElementById("output").innerHTML=out;
+}
+
+function GramSchmidtPrint(){
+	var out = matToTable(Q_Mat,"Q Matrix");
+	out += '<p>';
+	out += matToTable(R_Mat,"R Mattix");
+	document.getElementById("output").innerHTML=out;
+}
+
+function detPrint(){
+	var out = '<center>Determinants</center>';
+	out += det;
+	document.getElementById("output").innerHTML=out;
+}
+
+function allPrint(){
+	var out = matToTable(mat,"Matrix")+'<hr>';
+	out += matToTable(rrefMat,"RREF Matrix")+'<hr>';
+	out += matToTable(imageMat,"Image Matrix")+'<hr>';
+	out += matToTable(kernelMat,"Kernel Matrix");
+	if(matrixType){
+		out += '<hr>';
+		out += matToTable(Q_Mat,"Q Matrix");
+		out += '<p>';
+		out += matToTable(R_Mat,"R Mattix");
+		
+		if(mat_x==mat_y){
+			out += '<hr>';
+			out += matToTable(inverMat,"Invertible Matrix");
+			out += '<hr><center>Determinants</center>';
+			out += det;
+		}
+	}
+	
+	
+	
+	
+	document.getElementById("output").innerHTML=out;
+}
+ -->
+</script>
+
+</head>
+
+<body>
+<h1 align="center">線性代數-計算機</h1>
+<form name="form1" method="post" action="">
+<div align="center">
+  <input name="textY" type="text" size="10"> &times; 
+  <input name="textX" type="text" size="10">
+  <input type="button" name="Submit" value="產生矩陣" onClick="setMatrix()">
+</div>
+</form>
+
+<hr>
+<form name="form2" method="post" action="">
+<p><div id="input" align="center"></div>
+</form>
+
+<div id="menu" align="center"></div>
+<div id="output" align="center"></div>
+
+</body>
+</html>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1497692-16");
+pageTracker._trackPageview();
+} catch(err) {}</script>

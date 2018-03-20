@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="100%" height="100%" 
+viewBox="0 0 300 300" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g id="moon"></g>
+  <script type="text/javascript"><![CDATA[
+  	var moon = document.getElementById("moon");
+  
+	for (var i=70; i >= 0; i-=10){
+		var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');		
+		path.setAttribute('stroke','#000');
+		path.setAttribute('fill','white');
+		path.setAttribute('d',[
+			'M', 100, 100,
+			'c'+[i, 0], [i, 100], [0, 100],
+			'c'+[-i, 0], [-i, -100], [0, -100],
+			'z'
+		].join(' '));
+		
+		moon.appendChild(path);
+	};  	
+  
+   ]]></script>  
+</svg>

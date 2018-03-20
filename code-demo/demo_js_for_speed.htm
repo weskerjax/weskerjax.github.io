@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head profile="http://www.w3.org/2005/10/profile">
+<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
+<meta name="author" content="jax">
+<meta name="email" content="weskerjax+dm@gmail.com">
+<meta name="website" content="http://jax-work-archive.blogspot.com/">
+<link href="https://sites.google.com/site/weskerjax/material/jax_logo.ico" type="image/ico" rel="shortcut icon" />
+<link href="https://sites.google.com/site/weskerjax/material/jax_logo.png" type="image/png" rel="icon" />
+<title>Demo JavaScript Speed</title>
+<script language="javascript" type="text/javascript"><!--
+
+window.onload=function(){
+	var iTotal = 100000;
+	var jTotal = 10;
+	var i,j,t,s,e;
+
+	
+	s=(new Date()).getTime();
+	
+	for (i=0; i<iTotal; i++) { t = (t+9)%100; }	
+	for (i=0; i<iTotal; i++) { t = (t+9)%100; }	
+	for (i=0; i<iTotal; i++) { t = (t+9)%100; }	
+	for (i=0; i<iTotal; i++) { t = (t+9)%100; }	
+	for (i=0; i<iTotal; i++) { t = (t+9)%100; }	
+
+	console.log((new Date()).getTime()-s);
+	
+
+	
+	s=(new Date()).getTime();
+
+	for (i=0; i<iTotal; i++) {
+		t = (t+9)%100; 
+		t = (t+9)%100; 
+		t = (t+9)%100; 
+		t = (t+9)%100; 
+		t = (t+9)%100; 
+	}
+	
+	console.log((new Date()).getTime()-s);
+};
+/*
+1000000 => 10
+172 vs 113
+
+*/
+
+//-->
+</script>
+</head>
+<body>
+</body>
+</html>

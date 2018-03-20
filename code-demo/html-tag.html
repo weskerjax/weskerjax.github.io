@@ -1,0 +1,752 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>HTML 標籤一覽</title>
+	<link href='https://dl.dropboxusercontent.com/u/16784943/syntax_highlighter/syntax_highlighter.css' rel='stylesheet' type='text/css'/>
+	<script src='https://dl.dropboxusercontent.com/u/16784943/syntax_highlighter/syntax_highlighter.js' type='text/javascript' xml:space='preserve'></script>
+    <style type="text/css">
+        body{
+            font-size:12px;
+            width:900px;
+            margin:0 auto;
+			background:#f5f5f5;
+			color:#333;
+        }
+        .title{
+            clear:both;
+            padding: 50px 10px 0 10px;
+            border-bottom:1px solid #000;
+        }
+        .code,.preview{
+            width:450px;
+            float:left;
+            margin:5px 15px;
+        }
+        .preview{
+            width:250px;
+            border:1px solid #333;
+            padding:5px;
+            border-radius: 5px;
+            -moz-border-radius: 5px;
+			background:#fff;
+        }
+		
+		.dp-highlighter ol li, .dp-highlighter .columns div {
+		    line-height: 1.6em;
+		}
+
+    
+    </style>
+</head>
+<body>
+<h1>HTML 標籤一覽</h1>    
+
+<h2 class="title">Headers 標題</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;h1&gt;This is a heading&lt;/h1&gt;
+&lt;h2&gt;This is a heading&lt;/h2&gt;
+&lt;h3&gt;This is a heading&lt;/h3&gt;
+&lt;h4&gt;This is a heading&lt;/h4&gt;
+&lt;h5&gt;This is a heading&lt;/h5&gt;
+&lt;h6&gt;This is a heading&lt;/h6&gt;
+</pre>        
+</div>    
+<div class="preview">
+    <h1>This is a heading</h1>
+    <h2>This is a heading</h2>
+    <h3>This is a heading</h3>
+    <h4>This is a heading</h4>
+    <h5>This is a heading</h5>
+    <h6>This is a heading</h6>
+</div>    
+        
+        
+        
+<h2 class="title">段落 (Paragraph)</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;p&gt;This is a paragraph&lt;/p&gt;
+&lt;p&gt;This is another paragraph&lt;/p&gt; 
+</pre>    
+</div>    
+<div class="preview">
+    <p>This is a paragraph</p>
+    <p>This is another paragraph</p> 
+</div>    
+
+
+<h2 class="title">换行 (Line Break)</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;p&gt;
+    This &lt;br/&gt; 
+    is a para&lt;br/&gt;
+    graph with line breaks
+&lt;/p&gt; 
+</pre>
+</div>    
+<div class="preview">
+    <p>
+        This <br/> 
+        is a para<br/>
+        graph with line breaks
+    </p> 
+</div>    
+
+
+<h2 class="title">圖片 (image)</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;img src = "https://lh4.googleusercontent.com/-kJHq5qLW-gI/RwTlboJhUmI/AAAAAAAAAw0/3e3G89e_Meo/icon-fox.png" alt="web pic" /&gt;    
+</pre>    
+</div>    
+<div class="preview">
+    <img src = "https://lh4.googleusercontent.com/-kJHq5qLW-gI/RwTlboJhUmI/AAAAAAAAAw0/3e3G89e_Meo/icon-fox.png" alt="web pic" />    
+</div>    
+    
+        
+<h2 class="title">連結 (anchor)</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;!-- href : hypertext reference --&gt;
+&lt;a href="http://www.google.com/"&gt;google&lt;/a&gt;
+</pre>
+</div>    
+<div class="preview">
+    <!-- href : hypertext reference -->
+    <a href="http://www.google.com/">google</a>
+</div>    
+    
+
+    
+        
+<h2 class="title">HTML 註解</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;!-- This is a comment --&gt;
+</pre>    
+</div>    
+<div class="preview">
+    <!-- This is a comment -->
+</div>    
+    
+    
+    
+        
+<h2 class="title">有語意的文字標籤</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;ins&gt;insert 插入&lt;/ins&gt;
+&lt;del&gt;delete 删除&lt;/del&gt;
+
+&lt;em&gt;emphasis 重點&lt;/em&gt;
+&lt;strong&gt;strong 強調&lt;/strong&gt;     
+
+文字&lt;sub&gt;subscripts 下標&lt;/sub&gt;
+文字&lt;sup&gt;superscripts 上標&lt;/sup&gt;
+
+&lt;abbr&gt;abbreviation 縮寫&lt;/abbr&gt;
+&lt;address&gt;address 地址&lt;/address&gt;
+</pre>    
+</div>    
+<div class="preview">
+    <ins>insert 插入</ins><br/>
+    <del>delete 删除</del><br/>
+    
+    <em>emphasis 重點</em><br/>
+    <strong>strong 強調</strong><br/>     
+    
+    文字<sub>subscripts 下標</sub><br/>
+    文字<sup>superscripts 上標</sup><br/>
+    
+    <abbr>abbreviation 縮寫</abbr><br/>
+    <address>address 地址</address>
+</div>    
+    
+        
+<h2 class="title">沒語意的文字標籤，不建議使用</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;b&gt;bold 粗體&lt;/b&gt;
+&lt;i&gt;italic 斜體&lt;/i&gt;
+&lt;u&gt;底線&lt;/u&gt; 
+
+&lt;s&gt;strikeout 刪除線&lt;/s&gt;
+&lt;strike&gt;strikeout 刪除線&lt;/strike&gt; 
+
+&lt;big&gt;加大字級&lt;/big&gt;
+&lt;small&gt;縮小字級&lt;/small&gt;
+</pre>
+</div>    
+<div class="preview">
+    <b>bold 粗體</b><br/>
+    <i>italic 斜體</i><br/>
+    <u>底線</u><br/> 
+    <s>strikeout 刪除線</s><br/>
+    <strike>strikeout 刪除線</strike><br/> 
+    <big>加大字級</big><br/>
+    <small>縮小字級</small>
+</div>    
+    
+        
+<h2 class="title">程式原始碼，等寬字體</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;pre&gt;Preformatted Text 預格式化文字，保留空格和换行&lt;/pre&gt;
+&lt;code&gt;code 原始碼&lt;/code&gt; 
+&lt;tt&gt;Teletype 電傳打字機&lt;/tt&gt;
+&lt;samp&gt;Sample 範例&lt;/samp&gt;
+&lt;kbd&gt;Keyboard 鍵盤&lt;/kbd&gt;
+&lt;var&gt;Variable 變數&lt;/var&gt;
+&lt;dfn&gt;Definition    定義&lt;/dfn&gt;
+</pre>    
+</div>    
+<div class="preview">
+    <pre>Preformatted Text 預格式化文字，保留空格和换行</pre><br/>
+    <code>code 原始碼</code><br/> 
+    <tt>Teletype 電傳打字機</tt><br/>
+    <samp>Sample 範例</samp><br/>
+    <kbd>Keyboard 鍵盤</kbd><br/>
+    <var>Variable 變數</var><br/>
+    <dfn>Definition    定義</dfn>
+</div>    
+    
+        
+<h2 class="title">引用</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+其他文字&lt;cite&gt;Citation 引用&lt;/cite&gt;其他文字    
+&lt;blockquote&gt;Block Quote 引用&lt;/blockquote&gt;
+</pre>    
+</div>    
+<div class="preview">
+    其他文字<cite>Citation 引用</cite>其他文字    
+    <blockquote>Block Quote 引用</blockquote>
+</div>    
+    
+        
+<h2 class="title">有序列表(Ordered List)</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;ol&gt;
+  &lt;li&gt;布啦布啦之网页课程&lt;/li&gt;
+  &lt;li&gt;布啦布啦之网页代码&lt;/li&gt;
+  &lt;li&gt;布啦布啦之魔兽世界&lt;/li&gt;
+&lt;/ol&gt;
+</pre>    
+</div>    
+<div class="preview">
+<ol>
+  <li>布啦布啦之网页课程</li>
+  <li>布啦布啦之网页代码</li>
+  <li>布啦布啦之魔兽世界</li>
+</ol>    
+</div>    
+    
+        
+        
+<h2 class="title">定義列表 (Definition List)</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;dl&gt;
+    &lt;dt&gt;flame1&lt;/dt&gt;
+    &lt;dt&gt;flame2&lt;/dt&gt;
+    &lt;dd&gt;an ugly argument in a newsgroup&lt;/dd&gt;
+    
+    &lt;dt&gt;spam&lt;/dt&gt;
+    &lt;dd&gt;annoying unrequested email&lt;/dd&gt;
+    &lt;dd&gt;annoying unrequested email&lt;/dd&gt;
+    
+    &lt;dt&gt;troll&lt;/dt&gt;
+    &lt;dd&gt;someone who start flames&lt;/dd&gt;
+    &lt;dd&gt;by posting stupid things&lt;/dd&gt;
+&lt;/dl&gt;
+</pre>    
+</div>    
+<div class="preview">
+<dl>
+    <dt>flame1</dt>
+    <dt>flame2</dt>
+    <dd>an ugly argument in a newsgroup</dd>
+    
+    <dt>spam</dt>
+    <dd>annoying unrequested email</dd>
+    <dd>annoying unrequested email</dd>
+    
+    <dt>troll</dt>
+    <dd>someone who start flames</dd>
+    <dd>by posting stupid things</dd>
+</dl>
+</div>    
+    
+        
+        
+<h2 class="title">表格</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;table border="1"&gt;
+    &lt;caption&gt;表格标题&lt;/caption&gt;
+    &lt;tr&gt;
+        &lt;th&gt;v1&lt;/th&gt;
+        &lt;th&gt;v2&lt;/th&gt;
+        &lt;th&gt;v3&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;100&lt;/td&gt;
+        &lt;td&gt;200&lt;/td&gt;
+        &lt;td&gt;300&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+        &lt;td&gt;400&lt;/td&gt;
+        &lt;td&gt;500&lt;/td&gt;
+        &lt;td&gt;600&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+</pre>
+</div>    
+<div class="preview">
+<table border="1">
+    <caption>表格标题</caption>
+    <tr>
+        <th>v1</th>
+        <th>v2</th>
+        <th>v3</th>
+    </tr>
+    <tr>
+        <td>100</td>
+        <td>200</td>
+        <td>300</td>
+    </tr>
+    <tr>
+        <td>400</td>
+        <td>500</td>
+        <td>600</td>
+    </tr>
+</table>
+</div>  
+
+
+  
+<h2 class="title">表格2</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;table border="1"&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Weekday&lt;/th&gt;&lt;th&gt;Date&lt;/th&gt;&lt;th&gt;Qty&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;
+      &lt;th colspan="2"&gt;Total&lt;/th&gt;&lt;th&gt;4923&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/tfoot&gt;
+
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Mon&lt;/td&gt;&lt;td&gt;09/11&lt;/td&gt;&lt;td&gt;639&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Tue&lt;/td&gt;&lt;td&gt;09/12&lt;/td&gt;&lt;td&gt;596&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Wed&lt;/td&gt;&lt;td&gt;09/13&lt;/td&gt;&lt;td&gt;1135&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Thu&lt;/td&gt;&lt;td&gt;09/14&lt;/td&gt;&lt;td&gt;1002&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Fri&lt;/td&gt;&lt;td&gt;09/15&lt;/td&gt;&lt;td&gt;908&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Sat&lt;/td&gt;&lt;td&gt;09/16&lt;/td&gt;&lt;td&gt;371&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Sun&lt;/td&gt;&lt;td&gt;09/17&lt;/td&gt;&lt;td&gt;272&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+</pre>
+</div>    
+<div class="preview">
+<table border="1">
+  <thead>
+    <tr>
+      <th>Weekday</th><th>Date</th><th>Qty</th>
+    </tr>
+  </thead>
+  <tfoot>
+    <tr>
+      <th colspan="2">Total</th><th>4923</th>
+    </tr>
+  </tfoot>
+
+  <tbody>
+    <tr>
+      <td>Mon</td><td>09/11</td><td>639</td>
+    </tr>
+    <tr>
+      <td>Tue</td><td>09/12</td><td>596</td>
+    </tr>
+    <tr>
+      <td>Wed</td><td>09/13</td><td>1135</td>
+    </tr>
+    <tr>
+      <td>Thu</td><td>09/14</td><td>1002</td>
+    </tr>
+    <tr>
+      <td>Fri</td><td>09/15</td><td>908</td>
+    </tr>
+    <tr>
+      <td>Sat</td><td>09/16</td><td>371</td>
+    </tr>
+    <tr>
+      <td>Sun</td><td>09/17</td><td>272</td>
+    </tr>
+  </tbody>
+</table>
+</div>    
+
+
+<h2 class="title">排版標籤</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+other text  	
+
+&lt;div&gt;一個區塊屬性的標籤&lt;/div&gt;
+
+other text  	
+
+&lt;span&gt;一個行內屬性的標籤&lt;/span&gt;
+
+other text  	
+</pre>
+</div>    
+<div class="preview">
+	other text
+	
+	<div>一個區塊屬性的標籤</div>
+	
+	other text 
+	
+	<span>一個行內屬性的標籤</span>
+	
+	other text 
+</div>    
+    
+    
+    
+  
+<h2 class="title">表單</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;form  action="" method="get"&gt;
+    &lt;label&gt;
+        请输入你的姓名：
+        &lt;input type="text" name="yourname" /&gt;
+    &lt;/label&gt;
+    &lt;input type="submit" value="提交" /&gt;
+&lt;/form&gt;
+</pre>
+</div>    
+<div class="preview">
+<form  action="" method="get">
+    <label>
+        请输入你的姓名：
+        <input type="text" name="yourname" />
+    </label>
+    <input type="submit" value="提交" />
+</form>
+</div>    
+    
+    
+<h2 class="title">單行輸入框</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;input type="text" name="yourname" /&gt;
+</pre>
+</div>    
+<div class="preview">
+    <input type="text" name="yourname" />
+</div>    
+    
+        
+        
+<h2 class="title">密碼輸入框</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;input type="password" name="yourpassword" /&gt;
+</pre>
+</div>    
+<div class="preview">
+    <input type="password" name="yourpassword" />
+</div>    
+    
+        
+        
+<h2 class="title">多行輸入框</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;textarea name="yoursuggest"&gt;&lt;/textarea&gt;
+</pre>
+</div>    
+<div class="preview">
+    <textarea name="yoursuggest"></textarea>
+</div>    
+    
+        
+        
+<h2 class="title">按鈕</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;input type="submit" /&gt;
+&lt;input type="reset" /&gt;
+&lt;input type="button" value="按鈕" /&gt;
+
+&lt;button type="submit"&gt;送出&lt;/button&gt;
+&lt;button type="reset"&gt;重設&lt;/button&gt;
+&lt;button type="button"&gt;按鈕&lt;/button&gt;
+</pre>
+</div>    
+<div class="preview">
+<input type="submit" />
+<input type="reset" />
+<input type="button" value="按鈕" />
+<br />
+<button type="submit">送出</button>
+<button type="reset">重設</button>
+<button type="button">按鈕</button>
+</div>    
+    
+        
+        
+<h2 class="title">檔案上傳</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;input type="file" name="youfile" /&gt;
+</pre>
+</div>    
+<div class="preview">
+    <input type="file" name="youfile" />
+</div>    
+    
+        
+        
+<h2 class="title">多選選項</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;label&gt;
+    &lt;input type="checkbox" name="fruit1" value ="apple" /&gt;
+    苹果
+&lt;/label&gt;
+&lt;label&gt;
+    &lt;input type="checkbox" name="fruit1" value ="orange" /&gt;
+    桔子
+&lt;/label&gt;
+&lt;label&gt;
+    &lt;input type="checkbox" name="fruit1" value ="mango" /&gt;
+    芒果
+&lt;/label&gt;
+</pre>
+</div>    
+<div class="preview">
+<label>
+    <input type="checkbox" name="fruit1" value ="apple" />
+    苹果
+</label>
+<label>
+    <input type="checkbox" name="fruit1" value ="orange" />
+    桔子
+</label>
+<label>
+    <input type="checkbox" name="fruit1" value ="mango" />
+    芒果
+</label>
+</div>    
+    
+        
+        
+<h2 class="title">單選選項</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;label&gt;
+    &lt;input type="radio" name="fruit2" value = "Apple" /&gt;
+    苹果
+&lt;/label&gt;
+&lt;label&gt;
+    &lt;input type="radio" name="fruit2" value = "Orange" /&gt;
+    桔子
+&lt;/label&gt;
+&lt;label&gt;
+    &lt;input type="radio" name="fruit2" value = "Mango" /&gt;
+    芒果
+&lt;/label&gt;
+</pre>
+</div>    
+<div class="preview">
+<label>
+    <input type="radio" name="fruit2" value = "Apple" />
+    苹果
+</label>
+<label>
+    <input type="radio" name="fruit2" value = "Orange" />
+    桔子
+</label>
+<label>
+    <input type="radio" name="fruit2" value = "Mango" />
+    芒果
+</label>
+</div>    
+    
+        
+        
+<h2 class="title">下拉選單</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;select name="fruit" &gt;
+    &lt;option value="apple"&gt;苹果&lt;/option&gt;
+    &lt;option value="orange"&gt;桔子&lt;/option&gt;
+    &lt;option value="mango"&gt;芒果&lt;/option&gt;
+&lt;/select&gt;
+</pre>
+</div>    
+<div class="preview">
+<select name="fruit" >
+    <option value="apple">苹果</option>
+    <option value="orange">桔子</option>
+    <option value="mango">芒果</option>
+</select>
+</div>    
+    
+        
+        
+<h2 class="title">下拉選單群組</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;select name="fruit" &gt;
+    &lt;optgroup label="群組一"&gt;
+        &lt;option value="apple"&gt;苹果&lt;/option&gt;
+        &lt;option value="orange"&gt;桔子&lt;/option&gt;
+        &lt;option value="mango"&gt;芒果&lt;/option&gt;
+    &lt;/optgroup&gt;
+    
+    &lt;optgroup label="群組二"&gt;
+        &lt;option value="apple"&gt;苹果&lt;/option&gt;
+        &lt;option value="orange"&gt;桔子&lt;/option&gt;
+        &lt;option value="mango"&gt;芒果&lt;/option&gt;
+    &lt;/optgroup&gt;
+&lt;/select&gt;
+</pre>
+</div>    
+<div class="preview">
+<select name="fruit" >
+    <optgroup label="群組一">
+        <option value="apple">苹果</option>
+        <option value="orange">桔子</option>
+        <option value="mango">芒果</option>
+    </optgroup>
+    
+    <optgroup label="群組二">
+        <option value="apple">苹果</option>
+        <option value="orange">桔子</option>
+        <option value="mango">芒果</option>
+    </optgroup>
+</select>
+</div>    
+    
+        
+        
+<h2 class="title">表單分組</h2>    
+<div class="code">
+<pre class="xml:nocontrols" name="code">
+&lt;fieldset&gt;
+    &lt;legend&gt;personal stuff&lt;/legend&gt;
+
+    &lt;label&gt;
+        name: 
+        &lt;input type="text" name="realname" /&gt;
+    &lt;/label&gt;
+    &lt;label&gt;
+        email: 
+        &lt;input type="text" name="email" /&gt;
+    &lt;/label&gt;
+&lt;/fieldset&gt;
+
+&lt;fieldset&gt;
+    &lt;legend&gt;personal favorite&lt;/legend&gt;
+   
+    &lt;label&gt;
+        &lt;input type=checkbox name="onions" /&gt;
+        like green onions
+    &lt;/label&gt;
+    &lt;label&gt;
+        &lt;input type=checkbox name="cookies" /&gt;
+        like cookies
+    &lt;/label&gt;
+    &lt;label&gt;
+        &lt;input type=checkbox name="kimchee" /&gt;
+        like kim chee
+    &lt;/label&gt;
+&lt;/fieldset&gt;
+
+&lt;fieldset&gt;
+    &lt;label for="comments"&gt;
+        other comments:
+    &lt;/label&gt;
+    &lt;textarea id="comments" name="comments"&gt;
+        personal comments
+    &lt;/textarea&gt;
+&lt;/fieldset&gt;
+</pre>
+</div>    
+<div class="preview">
+<fieldset>
+    <legend>personal stuff</legend>
+
+    <label>
+        name: 
+        <input type="text" name="realname" />
+    </label>
+    <label>
+        email: 
+        <input type="text" name="email" />
+    </label>
+</fieldset>
+
+<fieldset>
+    <legend>personal favorite</legend>
+    
+    <label>
+        <input type=checkbox name="onions" />
+        like green onions
+    </label>
+    <label>
+        <input type=checkbox name="cookies" />
+        like cookies
+    </label>
+    <label>
+        <input type=checkbox name="kimchee" />
+        like kim chee
+    </label>
+</fieldset>
+
+<fieldset>
+    <label for="comments">
+        other comments:
+    </label>
+    <textarea id="comments" name="comments">personal comments
+    </textarea>
+</fieldset>
+</div>    
+    
+        
+        
+<!-- 語法加亮 -->
+<script type='text/javascript'>
+D.S.BloggerMode(); 
+D.S.HighlightAll("code");
+</script>
+<div style="clear:both;"></div>
+</body></html>

@@ -1,0 +1,134 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head profile="http://www.w3.org/2005/10/profile">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="author" content="jax">
+<meta name="email" content="weskerjax+dm@gmail.com">
+<meta name="website" content="http://jax-work-archive.blogspot.com/">
+<link href="https://sites.google.com/site/weskerjax/material/jax_logo.ico" type="image/ico" rel="shortcut icon" />
+<link href="https://sites.google.com/site/weskerjax/material/jax_logo.png" type="image/png" rel="icon" />
+<title>Gaussian Elimination</title>
+  
+</head>
+
+<body style="text-align:center;">
+<h1>Gaussian Elimination</h1>
+<textarea id="input_widget" cols="50" rows="10">2, 1 -1 8
+-3 -1 2 -11
+-2 1 2 -3</textarea><br />
+<input id="start_btn" type="button" value="開始計算" />
+
+<hr>
+
+<div id="output_widget"></div>
+
+
+
+<script language="JavaScript" type="text/javascript">
+document.getElementById("start_btn").onclick = function(){
+	var matrix = parseToMatrix(document.getElementById("input_widget").value);
+	
+	matrix = elimination(matrix);
+	document.getElementById("output_widget").innerHTML= toTableHtml(matrix);	
+	
+	console.log(matrix);
+}	
+
+function parseToMatrix (input) {
+	var i, j, maxCol = 0;
+	
+	var listStr = input.split('\n');
+	for (i in listStr) {
+		listStr[i] = listStr[i].trim().replace(/\s*,\s*/g, ',').replace(/\s+/g, ',').split(',');
+		maxCol = Math.max(maxCol, listStr[i].length);
+	}
+	
+	for (i in listStr) {
+		for (j=0; j<maxCol; j++) {
+			listStr[i][j] = parseFloat(listStr[i][j]) || 0; 
+		}
+	}	
+	return listStr;
+}
+
+function toTableHtml(matrix){
+	var i, j, temp = [];
+	for (i in matrix) {
+		temp[i] = [];
+		for(j in matrix[i]) {
+			temp[i][j] = matrix[i][j].toFixed(2);
+		}
+	}	
+
+	for (i in matrix) {
+		temp[i] = '<td>' + temp[i].join('</td><td>') + '</td>';
+	}	
+	
+	temp = '<tr>' + temp.join('</tr><tr>') + '</tr>';	
+	return '<table border=0 cellspacing=1 cellpadding=3>' + temp + '</table>';
+}
+
+
+function isZero(num){
+	num = Math.abs(num);
+	return (Math.max(num,0.0000001) == 0.0000001);	
+}
+
+
+function elimination(matrix){
+	if(matrix.length==0){ return matrix.length; }
+	
+	var m = matrix.length;
+	var n = matrix[0].length;
+
+    var x=0,y=0,j,i;
+    while(x<n && y<m){
+        
+		/* 如果列首為零，則找尋可以互換的列*/
+        while(x<n && isZero(matrix[y][x])){
+            j = y+1;
+            while(j<m && isZero(matrix[j][x])){ j++; }
+
+            if(j >= m){ x++; continue; } /*此行都為零，移至下一行*/
+
+            /* 找到列首不為零的列，兩列互換 */
+            var temp=matrix[j];
+            matrix[j]=matrix[y];
+            matrix[y]=temp;
+
+            break; /* 互換結束跳出迴圈 */
+        }
+        if(x>=n){ break; }
+
+        // 所有列值都除以列首，列首為(1)處理 */
+        for(i=n-1; i>x; i--){
+            matrix[y][i] /= matrix[y][x];
+        }
+        matrix[y][x]=1;
+
+        /* 消去上下列 */
+        for(j=0; j<m; j++){
+            if(j == y){ continue; } /* 跳過選取的列 */
+
+            /* 選取的列消去其他列 */
+            for(i=n-1; i>=x; i--){
+                matrix[j][i] -= matrix[y][i]*matrix[j][x];
+            }
+        }
+
+        x++;  y++;
+    }
+    return matrix;
+}
+
+
+	
+
+ -->
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head profile="http://www.w3.org/2005/10/profile">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Wretch to Atom</title>
+<meta name="author" content="Jax"/>
+<meta name="email" content="weskerjax+dm@gmail.com"/>
+<meta name="website" content="http://jax-work-archive.blogspot.com/"/>
+<meta name="history" content="2010.1.27"/>
+
+<style type="text/css">
+<!--
+body{ 
+	border: 1px solid #ccc;
+	background: #fff;
+    padding:10px;
+}
+textarea{
+    width:100%;
+    height:200px;
+    overflow:scroll;
+    overflow-y:scroll;
+}
+-->
+</style>
+<script type="text/javascript" src="https//ajax.googleapis.com/ajax/libs/mootools/1.2.4/mootools-yui-compressed.js"></script>
+<script language="JavaScript" type="text/javascript">
+<!--
+
+
+
+
+function init(){
+    var temp=[]; //副檔名
+    var fdtSet = 'autoinsert="true" context="com.powerflasher.fdt.ui.editor.template.as2" deleted="false" enabled="true"';
+    var className;
+    var tplName;
+    var tplContent;
+    var template;
+	
+	
+    //分析參考連結
+    $('m_content').value.replace(/[^\n]+/gi, function(matchStr){
+		matchStr=matchStr.trim();
+		if(!matchStr){return;}
+		
+		if(matchStr.indexOf('class')>=0){
+			className=matchStr.replace(/class/,'').match(/[a-z\.]+/i)[0];
+		}else{
+			tplName=matchStr.replace(/\([^)]+\)/gi,function(matchStr){
+				return matchStr.replace(/[^:,()]+:/gi,'');
+			}).replace(/;|static | /,'');
+			
+			if (matchStr.indexOf('on') == 0){
+				tplContent=matchStr.replace(/\(/,' = function(').replace(/:[^;:]+;/,' {${cursor}};');
+				
+			}else{
+				tplContent=matchStr.replace(/:[a-z\.]+/gi,'').replace(/static /,className+'.');
+			} 
+			
+//			template=tplName+' , '+tplContent+' => '+matchStr;
+			template='<template '+fdtSet+' description="'+className+'" name="'+tplName+'">'+tplContent+'</template>';
+	        temp.push(template);
+			
+		}
+		
+		
+	});
+    
+    /*輸出至頁面*/
+    $('m_print').value=temp.join('\r\n');	
+}
+//-->
+</script>
+</head>
+
+<body>
+  <label>
+            請將無名備份檔的內容貼上（將備份檔用記事本開啟）<strong style="color:#f00;">很抱歉此工具不支援 IE 瀏覽器</strong>  
+    <textarea class="inputEl" id="m_content" onfocus="select()" cols="" rows=""></textarea>
+  </label>
+  
+  <p><input type="button" value="轉換成 Atom 格式" onclick="init();" /></p>
+  <hr/>
+  
+  <label>
+            將轉換好的格式貼在新開的記事本上，並另存成 UTF-8 的編碼格式
+    <textarea class="inputEl" id="m_print" onfocus="select()" cols="" rows=""></textarea>
+  </label>
+</body>
+</html>

@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head profile="http://www.w3.org/2005/10/profile">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="author" content="jax">
+<meta name="email" content="weskerjax+dm@gmail.com">
+<meta name="website" content="http://jax-work-archive.blogspot.com/">
+<link href="https://sites.google.com/site/weskerjax/material/jax_logo.ico" type="image/ico" rel="shortcut icon" />
+<link href="https://sites.google.com/site/weskerjax/material/jax_logo.png" type="image/png" rel="icon" />
+<title>利用 Date() 檢查日期格式</title>
+<script language="JavaScript" type="text/javascript">
+<!--
+/*-- (判斷日期格式是否正確) -----------------------------------------------------------------*/
+function isDate(year,month,day){
+	var dateStr;
+	if(!month || !day){
+		if(month==''){dateStr=year+"/1/1"}
+		else if(day==''){dateStr=year+'/'+month+'/1';}
+		else{dateStr=year.replace(/[.-]/g,'/');}
+	}
+	else{dateStr=year+'/'+month+'/'+day;}
+	dateStr=dateStr.replace(/\/0+/g,'/');
+	
+	var accDate = new Date(dateStr);
+	var tempDate = accDate.getFullYear()+"/"+(accDate.getMonth()+1)+"/"+accDate.getDate();
+
+	if(dateStr==tempDate){return true;}
+	return false;
+}
+
+//-->
+</script>
+</head>
+
+<body>
+
+<form id="f1" name="f1">
+<fieldset style="margin:1em;padding:1em;"><legend>利用 Date() 檢查日期格式</legend>
+<p>
+  <input name="y" type="text" size="8" />年 
+  <input name="m" type="text" size="4" />月 
+  <input name="d" type="text" size="4" />日 
+  <input type="button" value="按鈕" onclick="alert(isDate(this.form.y.value,this.form.m.value,this.form.d.value)?'日期正確':'日期錯誤')" />
+</form>
+<hr>
+<form id="f2" name="f2">
+  <input name="date" type="text" size="12" />
+  <input type="button" value="按鈕" onclick="alert(isDate(this.form.date.value)?'日期正確':'日期錯誤')" /><br>
+2007/2/12<br>
+2007-2-12<br>
+2007.2.12<br>
+2007/02/02
+</fieldset>
+</form>
+</body>
+</html>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1497692-16");
+pageTracker._trackPageview();
+} catch(err) {}</script>

@@ -1,0 +1,581 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head profile="http://www.w3.org/2005/10/profile">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="author" content="Jax">
+<meta name="email" content="weskerjax+dm@gmail.com">
+<meta name="website" content="http://jax-work-archive.blogspot.com/">
+<meta name="history" content="2007.06.03">
+<link href="https://sites.google.com/site/weskerjax/material/jax_logo.ico" type="image/ico" rel="shortcut icon" />
+<link href="https://sites.google.com/site/weskerjax/material/jax_logo.png" type="image/png" rel="icon" />
+<title>數獨解題</title>
+
+
+<style type="text/css">
+<!--
+table,tr,td { text-align: center; }
+.red { color:red;}
+.redB { color:red; background:#FFFF88;}
+
+.blue { color:blue;}
+.blueB { color:blue; background:#FFFF88;}
+
+.back { background:#FFFF88;}
+
+.inputText input { background:#FFFF88;}
+td input { border: 1px solid #0044ff;text-align: center; }
+
+hr {border: thin dashed #000000;margin-top: 10px;margin-bottom: 10px;}
+-->
+</style>
+
+
+</head>
+
+<script language="JavaScript">
+<!--
+
+var mainMat; /* 主要矩陣 */
+var colorMat; /* 色彩矩陣 */
+var loopDepth = 3; /* 遞迴的深度 */   
+var amount = 3; /* 未知解的個數 */   
+	
+/* 主程式 */
+	function main(fOBJ){
+
+	mainMat = new Array(new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0));
+
+	colorMat = new Array( new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0));
+
+
+	   readInput(fOBJ);  /* 將表格讀入主要矩陣 */
+
+	   //var temp;
+	   //temp = algorithm_1(mainMat,colorMat); 
+	   mainMat = algorithm_1(mainMat,colorMat); 
+
+	        /* 將結果輸出 */
+	   if(mainMat==null){document.getElementById("printOut").innerHTML = "此 題 為 無 解 ！！"; }
+	   //if(temp==null){dataOutput(mainMat,colorMat); }
+
+	   else{ dataOutput(mainMat,colorMat); }
+	}
+
+
+/* 讀取輸入資料 */
+	function readInput(fOBJ){
+	   var i,j,iBase,jBase,temp;
+
+	   iBase=0;
+	   for(i=0; i<9; i++){
+	      jBase=0;
+	      if(i==3){iBase=6;}
+	      if(i==6){iBase=12;}
+	      for(j=0; j<9; j++){
+		 if(j==3){jBase=6;}
+		 if(j==6){jBase=12;}
+
+		 temp = fOBJ.elements[(i+iBase)*3+j+jBase].value;
+		 if(!isNaN(temp) && temp.length!=0){
+		     mainMat[i][j] = eval(temp);  /* 轉換為數字 */
+		     colorMat[i][j] = 1;  /* 設定輸入的色彩為 1 */
+		 }
+	      }
+	   }
+	}
+
+
+
+/* 運算 1 */
+	function algorithm_1(inputMat,colorMat,depth){
+
+	    if(depth<0){return null;}
+
+	    var cpMainMat; /* 複製主要矩陣 */
+	    var boxMat; /* 宮矩陣 */
+	    var rowMat; /* 列矩陣 */
+	    var columnMat; /* 行矩陣 */
+
+	    cpMainMat = new Array(new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0),
+				  new Array(0,0,0,0,0,0,0,0,0));
+
+	    boxMat = new Array(	  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false));
+
+	    rowMat = new Array(	  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false));
+
+
+	    columnMat = new Array(new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false),
+				  new Array(9,false,false,false,false,false,false,false,false,false));
+
+
+/*==== 複製輸入矩陣 =============================================================================================*/
+
+	       var x, y, i, j, k;
+	       var sole, boxNumber, box;
+	       var stop, stop2, NB, temp;
+
+		
+	       for(i=0; i<9; i++){
+	          for(j=0; j<9; j++){
+		     if(inputMat[i][j]==0){continue;}
+		     cpMainMat[i][j] = inputMat[i][j];  /* 複製輸入矩陣 */
+
+		     boxNumber = parseInt(i/3)*3 + parseInt(j/3);
+		     boxMat[boxNumber][cpMainMat[i][j]] = true;   /* 在宮矩陣設定已有的數字 */ 
+		     boxMat[boxNumber][0]--; 
+
+		     rowMat[i][cpMainMat[i][j]] = true;   /* 在列矩陣設定已有的數字 */
+		     rowMat[i][0]--;
+
+		     columnMat[j][cpMainMat[i][j]] = true;  /* 在行矩陣設定已有的數字 */
+		     columnMat[j][0]--;
+
+	          }
+	       }
+
+/*==== 以行為判斷基準計算 =============================================================================================*/
+	   
+	   	     do{
+			stop2=false;
+
+		        do{
+			   stop=false;
+		 	   for(x=0; x<9; x++){
+			      if(columnMat[x][0]==0){ continue; }
+			      for(NB=1; NB<=9; NB++){
+				  if(columnMat[x][NB]){ continue; }    /* 以行為判斷基準 */
+
+				  for(i=0; i<9; i++){    /* 搜尋交錯的數字 */
+				      boxNumber = parseInt(i/3)*3 + parseInt(x/3);
+				      if(!(cpMainMat[i][x]==0 && !rowMat[i][NB] && !boxMat[boxNumber][NB])){ continue; }
+
+				      sole=true;
+				      for(k=i+1; k<9; k++){    /* 搜尋是否有其他交錯的數字 */
+					  box = parseInt(k/3)*3 + parseInt(x/3);
+					  if(cpMainMat[k][x]==0 && !rowMat[k][NB] && !boxMat[box][NB]){sole=false;break;} }
+
+				      if(sole){    /* 如果沒有其他交錯的數字則為單一解 */
+					 columnMat[x][NB]=true;       columnMat[x][0]--;
+					 boxMat[boxNumber][NB]=true;  boxMat[boxNumber][0]--;
+					 rowMat[i][NB]=true;          rowMat[i][0]--;
+					 cpMainMat[i][x]=NB;       colorMat[i][x]=2; 
+					 stop=true;  /* 如果有解出數字則在解嘗試解出其他數字 */
+				      }
+				      break;
+
+				  }
+			      }
+			   }
+			}while(stop); 
+
+
+			for(i=0,j=0; j<9; j++){ i+= columnMat[j][0];}    /* 確認是否完成解題 */
+			if(i==0){return cpMainMat;}
+
+
+/*==== 以列為判斷基準計算 =============================================================================================*/
+
+		        do{
+			   stop=false;
+		 	   for(y=0; y<9; y++){
+			      if(rowMat[y][0]==0){ continue; }
+			      for(NB=1; NB<=9; NB++){
+				  if(rowMat[y][NB]){ continue; }    /* 以列為判斷基準 */
+
+				  for(i=0; i<9; i++){    /* 搜尋交錯的數字 */
+				      boxNumber = parseInt(y/3)*3 + parseInt(i/3);
+				      if(!(cpMainMat[y][i]==0 && !columnMat[i][NB] && !boxMat[boxNumber][NB])){ continue; }
+
+				      sole=true;
+				      for(k=i+1; k<9; k++){    /* 搜尋是否有其他交錯的數字 */ 
+					  box = parseInt(y/3)*3 + parseInt(k/3);
+					  if(cpMainMat[y][k]==0 && !columnMat[k][NB] && !boxMat[box][NB]){sole=false;break;} }
+
+				      if(sole){    /* 如果沒有其他交錯的數字則為單一解 */
+					 rowMat[y][NB]=true;          rowMat[y][0]--;    
+					 boxMat[boxNumber][NB]=true;  boxMat[boxNumber][0]--;
+					 columnMat[i][NB]=true;       columnMat[i][0]--;
+					 cpMainMat[y][i]=NB;       colorMat[y][i]=2;
+					 stop=true; stop2=true;  /* 如果有解出數字則在解嘗試解出其他數字 */
+				      }
+				      break;
+
+				  }
+			      }
+			   }
+			}while(stop);
+
+
+			for(i=0,j=0; j<9; j++){ i+= columnMat[j][0];}    /* 確認是否完成解題 */
+			if(i==0){return cpMainMat;}
+
+
+/*==== 以九宮格為判斷基準計算 =============================================================================================*/
+
+		        do{
+			   stop=false;
+		   	   for(y=0; y<9; y++){
+			      for(x=0; x<9; x++){
+			         if(cpMainMat[y][x]>0){ continue; }  /* 搜尋還沒有答案的格子 */
+
+				 boxNumber = parseInt(y/3)*3 + parseInt(x/3);  /* 記算出所屬的九宮格 */
+				 for(NB=1; NB<=9; NB++){  /* 搜尋交錯的數字 */
+				     if(!(!boxMat[boxNumber][NB] && !columnMat[x][NB] && !rowMat[y][NB])){ continue; }
+
+				     sole=true;
+				     for(k=NB+1; k<=9; k++){    /* 搜尋是否有其他交錯的數字 */ 
+					 if(!boxMat[boxNumber][k] && !columnMat[x][k] && !rowMat[y][k]){sole=false;break;} }
+
+				     if(sole){    /* 如果沒有其他交錯的數字則為單一解 */
+					rowMat[y][NB]=true;          rowMat[y][0]--;
+					boxMat[boxNumber][NB]=true;  boxMat[boxNumber][0]--;
+					columnMat[x][NB]=true;       columnMat[x][0]--;
+					cpMainMat[y][x]=NB;       colorMat[y][x]=2;
+					stop=true; stop2=true;  /* 如果有解出數字則在解嘗試解出其他數字 */
+				     }
+				     break;
+
+		    		 }
+	      		      }
+	   		   }
+			}while(stop);
+
+
+			for(i=0,j=0; j<9; j++){ i+= columnMat[j][0];}    /* 確認是否完成解題 */
+			if(i==0){return cpMainMat;}
+
+	   	     }while(stop2);
+
+
+/*==== 確認是否為無解 =============================================================================================*/		
+
+
+			/* 確認是否為無解 */
+		     for(j=0; j<9; j++){ 
+			if( boxMat[j][0]==1 || rowMat[j][0]==1 || columnMat[j][0]==1){return null;}
+		     }
+
+/*==== 對最少空格的列給予代入計算 =============================================================================================*/
+
+
+			/* 尋找剩下最少解的列 */
+		     i=amount;
+
+		     y=-1;
+		     for(j=0; j<9; j++){ 
+			if(rowMat[j][0]<=i && rowMat[j][0]>1){ i=rowMat[j][0]; y=j; }
+		     }
+
+
+			/* 對最少空格的列給予代入可能的解 */
+		     if(y>=0){
+			x=0;
+			while(cpMainMat[y][x]!=0){x++} /* 尋找該列中第一個空格 */
+
+			colorMat[y][x]=2;
+
+			for(NB=1; NB<=9; NB++){ /* 嘗試代入可能的解 */
+			   if(rowMat[y][NB]){ continue; }
+			   cpMainMat[y][x]=NB;
+			   temp = algorithm_1(cpMainMat,colorMat,depth-1);
+
+			   if(temp!=null){return temp;} /* 判斷是否已完成解答 */
+			}
+			cpMainMat[y][x]=0; 
+		     }
+
+/*==== 對最少空格的行給予代入計算 =============================================================================================*/
+
+			/* 尋找剩下最少解的行 */
+		     i=amount;
+
+		     x=-1;
+		     for(j=0; j<9; j++){
+			if(columnMat[j][0]<=i && columnMat[j][0]>1){ i=columnMat[j][0]; x=j; } 
+		     }
+
+
+			/* 對最少空格的行給予代入可能的解 */
+		     if(x>=0){
+			y=0;
+			while(cpMainMat[y][x]!=0){y++} /* 尋找該行中第一個空格 */
+
+			colorMat[y][x]=2;
+
+			for(NB=1; NB<=9; NB++){ /* 嘗試代入可能的解 */
+			   if(columnMat[x][NB]){ continue; }
+			   cpMainMat[y][x]=NB;
+			   temp = algorithm_1(cpMainMat,colorMat,depth-1);
+
+			   if(temp!=null){return temp;} /* 判斷是否已完成解答 */
+			}
+			cpMainMat[y][x]=0; 
+		     }
+
+
+
+		return null;
+	}
+
+
+/* 輸出資料 */
+	function dataOutput(cpMainMat,colorMat){
+	   var i,j,TF;
+	   var outTable = "<table width=\"220\" height=\"220\" border=\"1\" cellpadding=\"5\" cellspacing=\"0\" align=\"center\">";
+
+	   for(i=0; i<9; i++){
+	      outTable += "<tr>";
+	      for(j=0; j<9; j++){
+		  TF = (parseInt(j/3)+parseInt(i/3)) % 2;
+
+		  /* 判斷輸出的色彩 */
+		  if(colorMat[i][j] == 1){ 
+		     if(TF == 0){outTable = outTable + "<td class=\"redB\">" + cpMainMat[i][j] + "</td>"; }
+		     else{outTable = outTable + "<td class=\"red\">" + cpMainMat[i][j] + "</td>"; }
+		  }
+
+		  else if(colorMat[i][j] == 2){ 
+		     if(TF == 0){outTable = outTable + "<td class=\"blueB\">" + cpMainMat[i][j] + "</td>"; }
+		     else{outTable = outTable + "<td class=\"blue\">" + cpMainMat[i][j] + "</td>"; }
+		  }
+
+		  else{ 
+		     if(TF == 0){outTable = outTable + "<td class=\"back\">" + cpMainMat[i][j] + "</td>"; }
+		     else{outTable = outTable + "<td>" + cpMainMat[i][j] + "</td>"; }
+		  }
+	      }
+
+	      outTable += "</tr>";
+	   }
+	   outTable += "</table>";
+
+
+	document.getElementById("printOut").innerHTML = outTable;
+	}
+
+//-->
+</script>
+
+
+<body>
+<h3 align="center">數獨解題</h3>
+
+<p>
+<form name="set">
+
+<table border="1" align="center" cellpadding="4">
+  <tr>
+    <td class="inputText">
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" /><br>
+		
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" /><br>
+		
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+
+    </td>
+
+    <td>
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" /><br>
+		
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" /><br>
+		
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+
+    </td>
+
+    <td class="inputText">
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" /><br>
+		
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" /><br>
+		
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+
+    </td>
+
+  </tr>
+
+  <tr>
+    <td>
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" /><br>
+		
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" /><br>
+		
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+
+    </td>
+
+    <td class="inputText">
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" /><br>
+		
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" /><br>
+	
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+
+    </td>
+
+    <td>
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" /><br>
+		
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" /><br>
+		
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+
+    </td>
+
+  </tr>
+  <tr>
+    <td class="inputText">
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" /><br>
+		
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" /><br>
+		
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+
+    </td>
+
+    <td>
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" /><br>
+		
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" /><br>
+		
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+
+    </td>
+
+    <td class="inputText">
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" /><br>
+		
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" /><br>
+		
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+    	<input type="text" size="1" maxlength="1" />
+
+    </td>
+
+  </tr>
+
+  <tr>
+    <td colspan="3" align="center">
+	<input name="Input" type="button" value="送出" onClick="main(this.form)" />
+	&nbsp; &nbsp; &nbsp; &nbsp;
+	<input type="reset" value="清除" />
+    </td>
+  </tr>
+
+</table>
+
+</form>
+
+<div id="printOut" align="center"></div>
+
+</body>
+</html>
+<!-- Jax 96.06.03 --><script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1497692-16");
+pageTracker._trackPageview();
+} catch(err) {}</script>

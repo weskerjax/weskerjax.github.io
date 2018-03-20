@@ -1,0 +1,318 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head profile="http://www.w3.org/2005/10/profile">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="author" content="jax">
+<meta name="history" content="2008/12/3">
+<meta name="email" content="weskerjax+dm@gmail.com">
+<meta name="website" content="http://jax-work-archive.blogspot.com/">
+<link href="https://sites.google.com/site/weskerjax/material/jax_logo.ico" type="image/ico" rel="shortcut icon" />
+<link href="https://sites.google.com/site/weskerjax/material/jax_logo.png" type="image/png" rel="icon" />
+<title>MooCrop</title>
+<style>
+.MC_Wrapper{
+    position:relative;
+    overflow:hidden;
+}
+.MC_Mask{
+	background:#000;
+	opacity:0.6;
+	filter:alpha(opacity=60);/* IE6 */
+    position:absolute;
+    overflow:hidden;
+}
+.MC_Crop{
+    position:absolute;
+    border:1px dashed blue;
+    cursor:move;
+    background:url(a);
+}
+.MC_Handle{	
+    position:absolute;
+    background:#00F;
+    overflow:hidden;
+    width:8px;
+    height:8px;
+    margin:-4px;
+}
+.MC_Move .MC_Handle{	
+    display:none;
+}
+</style>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/mootools/1.11/mootools.js"></script>
+
+</head>
+<body>
+<div style="height:160px;width:160px;overflow:hidden;position:relative;z-index:1;">
+	<img src="" id="crop_example4_show" style="position:absolute;" />
+</div>
+<div id="demo1" class="MC_Wrapper"></div>
+<div id="print"></div>
+	
+
+<script>
+var MooCrop = new Class({
+	options : {
+		cropMin :160,
+		imgMax :500,
+		onSetup: Class.empty,
+		onCrop: Class.empty,
+		onComplete: Class.empty,
+		onDblClk: Class.empty
+	},
+	initialize: function(el,url, options){
+		this.setOptions(options);
+		this.wrapper= $(el);
+		
+        /*建立底圖元素*/
+		this.img=new Element("img", {
+			'src':url,
+			'styles':{'position':'absolute','top':'0','left':'0'},
+			'events':{'load':this.setup.bind(this)}
+		}).injectInside(this.wrapper);
+		
+        /*建立遮蔽元素*/
+		this.north = new Element("div",{'class':'MC_Mask','styles':{'top':'0','width':'100%'}}).injectInside(this.wrapper);
+		this.south = new Element("div",{'class':'MC_Mask','styles':{'bottom':'0','width':'100%'}}).injectInside(this.wrapper);
+		this.east =  new Element("div",{'class':'MC_Mask','styles':{'right':'0'}}).injectInside(this.wrapper);
+		this.west =  new Element("div",{'class':'MC_Mask','styles':{'left':'0'}}).injectInside(this.wrapper);
+		 
+        /*建立選取匡*/
+		this.cropArea = new Element("div", { 
+	        'class':'MC_Crop',
+			'events':{
+				'dblclick' : function(){ this.fireEvent('onDblClk',this.getCropInfo());}.bind(this),
+		        /*註冊拖動事件*/
+				'mousedown' : this.activate.bindWithEvent(this,'NESW')}
+			}).injectInside(this.wrapper);
+        /*建立縮放把手*/
+        this.cropArea.setHTML(
+	        '<div class="MC_Handle" name="N" style="cursor:n-resize;top:0pt;left:50%;"></div>'+
+	        '<div class="MC_Handle" name="N" style="cursor:ne-resize;top:0pt;right:0pt;"></div>'+
+	        '<div class="MC_Handle" name="E" style="cursor:e-resize;top:50%;right:0pt;"></div>'+
+	        '<div class="MC_Handle" name="S" style="cursor:se-resize;bottom:0pt;right:0pt;"></div>'+
+	        '<div class="MC_Handle" name="S" style="cursor:s-resize;bottom:0pt;left:50%;"></div>'+
+	        '<div class="MC_Handle" name="W" style="cursor:sw-resize;bottom:0pt;left:0pt;"></div>'+
+	        '<div class="MC_Handle" name="W" style="cursor:w-resize;top:50%;left:0pt;"></div>'+
+	        '<div class="MC_Handle" name="NW" style="cursor:nw-resize;top:0pt;left:0pt;"></div>'
+        );
+        /*註冊縮放事件*/
+		this.cropArea.getElements('.MC_Handle').each(function(handle){
+			handle.addEvent('mousedown',this.activate.bindWithEvent(this,handle.getProperty('name')));
+		},this);
+		
+		this.bound ={
+			'refresh': this.refresh.bindWithEvent(this),
+			'stop': this.stop.bind(this)
+		};
+	},
+
+	setup : function(){
+        var o=this.options;
+        this.img.removeProperty('width');/*删除 width 屬性*/
+        this.img.removeProperty('height');/*删除 height 屬性*/
+       
+        /*原始大小*/
+    	var w=this.img.width, h=this.img.height;
+		
+        /*設定縮圖*/
+        if(w<=o.imgMax && h<=o.imgMax){
+            this.rate=1;/*縮放比*/
+            this.min=o.cropMin;
+        }else if(w<h){
+            this.img.width=o.imgMax;
+            this.img.height=(h*o.imgMax)/w;
+            this.rate=w/o.imgMax;/*計算目前縮放比*/
+            this.min=(o.cropMin/this.rate).toInt()+1;
+        }else{
+            this.img.height=o.imgMax;
+            this.img.width=(w*o.imgMax)/h;
+            this.rate=h/o.imgMax;/*計算目前縮放比*/
+            this.min=(o.cropMin/this.rate).toInt()+1;
+        }
+        /*紀錄裁切範圍*/
+        this.height=this.img.height;
+        this.width=this.img.width;
+		this.wrapper.setStyles({'width':this.width,'height':this.height});		
+        /*初始選取匡的大小及定位*/
+		this.cropArea.setStyles({
+			'width': this.min, 
+			'height':this.min,
+			'top' : (this.height-this.min)/2,
+			'left': (this.width-this.min)/2 
+        });	
+        /*處理遮蔽元素的定位*/
+		this.drawMasks();
+		this.fireEvent('onSetup',this);
+	},
+
+	activate : function(event,handle){
+		event.stop();
+		this.handleCode=handle;
+		this.mouseStart=event.page;
+        /*拖動前的樣式處理*/
+		if(handle=='NESW'){this.cropArea.addClass('MC_Move');}
+        /*紀錄拖動前的大小及定位*/
+		this.cropData={
+			'x':this.cropArea.getStyle('left').toInt(),
+			'y':this.cropArea.getStyle('top').toInt(),
+			's':this.cropArea.getStyle('height').toInt()+2
+		};
+		var d=this.cropData;
+		d.x2=this.width-d.x-d.s;
+		d.y2=this.height-d.y-d.s;
+        /*計算各方向範圍值*/
+		var m=this.min+2;
+		d.neMax=d.s-m;
+		d.neMin=-((d.x2<d.y)?d.x2:d.y);
+		d.seMax=(d.x2<d.y2)?d.x2:d.y2;
+		d.seMin=m-d.s;
+		d.swMax=d.s-m;
+		d.swMin=-((d.x<d.y2)?d.x:d.y2);
+		d.nwMax=d.s-m;
+		d.nwMin=-((d.x<d.y)?d.x:d.y);
+
+        /*註冊滑鼠事件*/
+		document.addListener('mousemove', this.bound.refresh);
+		document.addListener('mouseup', this.bound.stop);
+	},
+
+	stop : function(){
+		if(this.handleCode=='NESW'){this.cropArea.removeClass('MC_Move');};
+        /*移除滑鼠事件*/
+		document.removeListener('mousemove', this.bound.refresh);
+		document.removeListener('mouseup', this.bound.stop);
+		this.fireEvent('onComplete',this);
+	},
+
+    refresh: function(event){
+        /*計算差值*/
+        var diffX=event.page.x-this.mouseStart.x;
+        var diffY=event.page.y-this.mouseStart.y;
+		
+		var d=this.cropData;
+		var c={'x':d.x,'y':d.y,'s':d.s};
+
+		switch(this.handleCode){
+		case 'NESW':
+	        /*範圍檢查*/
+			if(diffX>d.x2){diffX=d.x2;}
+			else if(diffX<(-d.x)){diffX=(-d.x);}
+			if(diffY>d.y2){diffY=d.y2;}
+			else if(diffY<(-d.y)){diffY=(-d.y);}
+			c.x+=diffX;c.y+=diffY;
+			break;
+		case 'S':
+	        /*範圍檢查*/
+			if(diffY>d.seMax){diffY=d.seMax;}
+			else if(diffY<d.seMin){diffY=d.seMin;}
+			c.s+=diffY; /*加上差值*/
+			break;
+		case 'E':
+	        /*範圍檢查*/
+			if(diffX>d.seMax){diffX=d.seMax;}
+			else if(diffX<d.seMin){diffX=d.seMin;}
+			c.s+=diffX; /*加上差值*/
+			break;
+		case 'N':
+	        /*範圍檢查*/
+			if(diffY>d.neMax){diffY=d.neMax;}
+			else if(diffY<d.neMin){diffY=d.neMin;}
+			c.s-=diffY;c.y+=diffY; /*加上差值*/
+			break;
+		case 'NW':
+	        /*範圍檢查*/
+			if(diffY>d.nwMax){diffY=d.nwMax;}
+			else if(diffY<d.nwMin){diffY=d.nwMin;}
+			c.s-=diffY;c.y+=diffY;c.x+=diffY; /*加上差值*/
+			break;
+		case 'W':
+	        /*範圍檢查*/
+			if(diffX>d.swMax){diffX=d.swMax;}
+			else if(diffX<d.swMin){diffX=d.swMin;}
+			c.s-=diffX;c.x+=diffX; /*加上差值*/
+			break;crop
+		}
+       
+        /*套用新的定位及大小*/
+        this.cropArea.setStyles({
+			'top':c.y,
+			'left':c.x,
+			'width':c.s-2,
+			'height':c.s-2
+		});
+		 /*處理遮蔽元素的定位*/
+        this.drawMasks();
+		this.fireEvent('onCrop',this);
+		event.stop();
+    },
+	/*遮蔽元素的定位*/
+	drawMasks : function(){
+        var c=this.cropArea.getStyles('top','left','height');
+		c.top=c.top.toInt();
+		c.left=c.left.toInt();
+        c.height=c.height.toInt()+2;
+        c.bottom=this.height-c.height-c.top;
+        c.right=this.width-c.height-c.left;
+        
+    	this.north.setStyle('height',c.top);
+		this.south.setStyle('height',c.bottom);
+		this.east.setStyles({'height':c.height,'width':c.right,'top':c.top});
+		this.west.setStyles({'height':c.height,'width':c.left,'top':c.top});
+	},
+	/*取得裁切範圍*/
+	getCropInfo : function(){
+ 		var r = this.rate;
+	 	return {
+            'x':(this.cropArea.getStyle('top').toInt()*r).toInt(),
+            'y':(this.cropArea.getStyle('left').toInt()*r).toInt(),
+            'h':(this.cropArea.getStyle('height').toInt()*r).toInt(),
+            'w':(this.cropArea.getStyle('width').toInt()*r).toInt()
+        }        
+	},
+	/*移除*/
+	removeOverlay: function(){
+		this.cropArea.removeEvents('mousedown').removeEvents('dblclick').getElements('.MC_Handle').removeEvents('mousedown');
+		this.wrapper.empty();
+	}
+
+
+});
+MooCrop.implement(new Events, new Options);
+
+var crop4 = new MooCrop(
+'demo1',
+'http://lh5.ggpht.com/_b8lN_UbLoEc/SR6Rm5sbfNI/AAAAAAAAB14/EYQgMFJy2cg/wallp_kaimaku_3.jpg',
+{
+	'cropMin':160,
+	'imgMax' :400,
+ 	'onSetup': function(e){$('crop_example4_show').src=this.img.src;this.fireEvent('onComplete',this); },
+ 	'onComplete': function(e){
+ 		r = 160/this.cropArea.offsetHeight;
+ 		$('crop_example4_show').setStyles({
+ 			'top': -(this.cropArea.getStyle('top').toInt() * r),
+ 			'left': -(this.cropArea.getStyle('left').toInt() * r),
+ 			'height': this.height*r,
+ 			'width': this.width*r
+ 		})
+ 	},
+	'onDblClk':function(size){
+        $('print').innerHTML=Object.toQueryString(size);
+	} 
+}
+); 
+
+ 
+</script>
+
+</body>
+</html>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1497692-16");
+pageTracker._trackPageview();
+} catch(err) {}</script>

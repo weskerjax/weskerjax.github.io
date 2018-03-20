@@ -1,0 +1,14 @@
+<public:component>
+<script type="text/javascript">
+/*
+	author:jax
+	history:2008/09/13
+	email:weskerjax@gmail.com
+	website:http://jax-work-archive.blogspot.com
+*/
+
+this.onmouseover=function(){if(!this.className.match(/(^|\s)hover(\s|$)/)){this.className=(this.className+' hover').replace(/\s{2,}/g,' ').replace(/^\s+|\s+$/g, '');}}
+this.onmouseout=function(){this.className=this.className.replace(/(^|\s)hover(\s|$)/,' ').replace(/\s{2,}/g,' ').replace(/^\s+|\s+$/g, '');}
+this.style.behavior=null;
+</script>
+</public:component>

@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head profile="http://www.w3.org/2005/10/profile">
+<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
+<meta name="author" content="jax">
+<meta name="email" content="weskerjax+dm@gmail.com">
+<meta name="website" content="http://jax-work-archive.blogspot.com/">
+<link href="https://sites.google.com/site/weskerjax/material/jax_logo.ico" type="image/ico" rel="shortcut icon" />
+<link href="https://sites.google.com/site/weskerjax/material/jax_logo.png" type="image/png" rel="icon" />
+<title>Demo JavaScript Speed</title>
+<script language="javascript" type="text/javascript"><!--
+var data=[];
+for(var j=0;j<1000;j++){
+	data[j]=Math.random();
+}
+
+window.onload=function(){
+	s=(new Date()).getTime();
+	for (var i=0; i<data.length; i++) {
+	    document.getElementById("link1").innerHTML+=data[i];
+	    document.getElementById("link1").hreh     +="&"+data[i];
+	    document.getElementById("link1").title    +=data[i]+",";
+	    document.getElementById("link1").className+=data[i]+" ";
+    	document.getElementById("link1").name     +=data[i]+"_";
+	}
+	e = (new Date()).getTime();
+	diff1=e-s;
+	s=(new Date()).getTime();
+	/*利用暫存變數作處理*/
+	var temp1='',temp2='',temp3='',temp4='',temp5='';
+	/*利用 l 紀錄 length 的值，以避免多次存取成員變數*/
+	for (var i=0,l=data.length; i<l; i++) {
+		/*利用 d 紀錄 data[i] 的值，以避免多次存取成員變數*/
+		d=data[i];
+		temp1+=d;
+		temp2+="&"+d;
+		temp3+=d+",";
+		temp4+=d+" ";
+		temp5+=d+"_";
+	}
+	/*利用暫存變數紀錄 DOM 物件*/
+	var link=document.getElementById("link2");
+	link.innerHTML+=temp1;
+	link.hreh     +=temp2;
+	link.title    +=temp3;
+	link.className+=temp4;
+	link.name     +=temp5;
+	e = (new Date()).getTime();
+	diff2=e-s;
+	
+	document.getElementById("output1").innerHTML+=diff1;
+	document.getElementById("output2").innerHTML+=diff2;
+};
+//-->
+</script>
+</head>
+<body>
+<a id="link1" hreh="" title="" class="" name=""></a>
+<a id="link2" hreh="" title="" class="" name=""></a>
+<p>第 1 個耗時：<tt id="output1"></tt>(msec)</p>
+<p>第 2 個耗時：<tt id="output2"></tt>(msec)</p>
+</body>
+</html>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-1497692-16");
+pageTracker._trackPageview();
+} catch(err) {}</script>

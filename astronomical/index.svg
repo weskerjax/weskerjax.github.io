@@ -30,7 +30,7 @@ viewBox="0 0 1800 1800"
    ]]>
   </style>
   <title>天文鐘</title>	
-  <script type="text/javascript" xlink:href="frame.js" />  
+  <script type="text/javascript" xlink:href="run.js" />  
  </defs>
  <g id="圖層_x0020_2">
   <metadata id="CorelCorpID_0Corel-Layer"/>

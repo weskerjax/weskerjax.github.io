@@ -32,7 +32,7 @@ viewBox="0 0 1800 1800"
   <title>天文鐘</title>	
   <script type="text/javascript" xlink:href="run.js" />  
  </defs>
- <g id="圖層_x0020_2">
+ <g id="root">
   <metadata id="CorelCorpID_0Corel-Layer"/>
   <line id="center" class="fil0" x1="906.092" y1="902.129" x2="906.092" y2= "902.129" />
   <path id="background" class="fil1" d="M906.092 31.421c480.79,0 870.696,389.906 870.696,870.696 0,480.79 -389.906,870.696 -870.696,870.696 -480.79,0 -870.696,-389.906 -870.696,-870.696 0,-480.79 389.906,-870.696 870.696,-870.696z"/>

@@ -17,7 +17,7 @@ function $create(tag){
 function distance(p1, p2){
 	var x = (p1.x + p1.width / 2)  - (p2.x + p2.width / 2);   
 	var y = (p1.y + p1.height / 2) - (p2.y + p2.height / 2);   
-	return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+	return Math.sqrt(x * x + y * y);
 }
 
 /* 修補黃道角度 */
@@ -69,88 +69,88 @@ function setMoonPhase(angle){
 
 
 
-function init(todayStamp){
+function display(datetime){
 	var center = $("center").getBBox();
-	var today = new Date(todayStamp);
+	var timeStamp = datetime.getTime(); 
 	 
 	/* 黃道中心 */
 	var zodiacCenter = $("zodiac_center").getBBox(); 
 	
 	 /* 黃道角度，春分為原點 3月21號 */
-	var start = new Date(today.getFullYear(), 2, 21);
-	var end = new Date(today.getFullYear()+1, 2, 21);
-	if(start > todayStamp){
+	var start = new Date(datetime.getFullYear(), 2, 21);
+	var end = new Date(datetime.getFullYear()+1, 2, 21);
+	if(start > timeStamp){
 		end = start;
-		start = new Date(today.getFullYear()-1, 2, 21);  
+		start = new Date(datetime.getFullYear()-1, 2, 21);  
 	}
-	var zodiacAngle = (todayStamp - start) / (end - start) * 360;
-	$("zodiac").setAttribute('transform','rotate('+[zodiacAngle, center.x, center.y]+')');
+	var zodiacAngle = (timeStamp - start) / (end - start) * 360;
+	$("zodiac").setAttribute('transform', 'rotate('+[zodiacAngle, center.x, center.y]+')');
 	
 
 	/* 太陽角度 */	
 	var sunAngle = patchZodiacAngle(zodiacAngle, $("sun").getBBox());
-	$("sun").setAttribute('transform','rotate('+[-sunAngle, zodiacCenter.x, zodiacCenter.y]+')');
-	$("sun").setAttribute('title',today.toLocaleDateString());
+	$("sun").setAttribute('transform', 'rotate('+[-sunAngle, zodiacCenter.x, zodiacCenter.y]+')');
+	$("sun").setAttribute('title', datetime.toLocaleDateString());
 		
 	
 	/* 月亮指針角度 */
-	var moonPointAngle = ((todayStamp - moonStart) / moonDivisor * 360) % 360; 
-	$("moon_point").setAttribute('transform','rotate('+[-moonPointAngle, center.x, center.y]+')');
+	var moonPointAngle = ((timeStamp - moonStart) / moonDivisor * 360) % 360; 
+	$("moon_point").setAttribute('transform', 'rotate('+[-moonPointAngle, center.x, center.y]+')');
 	setMoonPhase(moonPointAngle);
 	
 	/* 月亮角度 */
 	var moonAngle = patchZodiacAngle(zodiacAngle + moonPointAngle, $("moon").getBBox());
-	$("moon").setAttribute('transform','rotate('+[-moonAngle, zodiacCenter.x, zodiacCenter.y]+')');
+	$("moon").setAttribute('transform', 'rotate('+[-moonAngle, zodiacCenter.x, zodiacCenter.y]+')');
 	$("moon").setAttribute('title', (moonPointAngle * moonCycle / 360).toFixed(1));
-	
 
-	var rotation = $("rotation"); /* 自轉 */
-	var minute = $("minute");
 	
-	/* 更新畫面 */
-	var timerId;
-	(function refresh() {
-		var delta = (Date.now() - todayStamp) / 1000 * 360;
-		
-		/* 分鐘盤 */
-		delta = delta / 3600; 
-		minute.setAttribute('transform','rotate('+[(-delta % 360), center.x, center.y]+')');
-		
-		/* 自轉盤 */
-		delta = delta / 24; 
-		rotation.setAttribute('transform','rotate('+[(delta % 360), center.x, center.y]+')');
-			
-		clearTimeout(timerId);
-		timerId = setTimeout(refresh, 1000);
-	})();
+	/* 分鐘盤 */
+	var minuteRate =  (datetime.getMinutes() + datetime.getSeconds() / 60) / 60; 
+	$("minute").setAttribute('transform', 'rotate('+[(-minuteRate * 360), center.x, center.y]+')');
+	
+	/* 自轉盤 */
+	var hourRate =  (datetime.getHours() + datetime.getMinutes() / 60) / 24;
+	$("rotation").setAttribute('transform', 'rotate('+[(hourRate * 360), center.x, center.y]+')');
+
 };
-
 
 
 
 window.onload = function(today){
 	/* 定時重新載入畫面 */
 	setTimeout(function(){ location.reload(); }, 3600 * 1000);
+
+	var mode = 0;
+	var interval = 0;
+	display(new Date());
 	
-	var today = new Date();
-	today.setHours(0);
-	today.setMinutes(0);
-	today.setSeconds(0);
-	init(today.getTime());	
-	
-	var stamp = today.getTime();
-	var timerId = null;
-	$("sun").style.cursor = 'pointer';
-	$("sun").onclick = function() {
-		if(timerId){
-			clearInterval(timerId);  
-			timerId = null;
-		}else{
-			timerId = setInterval(function(){
-				init(stamp += (86400 * 1000));	
-			}, 200);
+	setInterval(function() {
+		var datetime = new Date();
+		
+		switch(mode){
+			case 1:
+				interval += 10; 
+				datetime.setMinutes(datetime.getMinutes() + interval);
+				break;
+			case 2:
+				interval += 1440; 
+				datetime.setMinutes(datetime.getMinutes() + interval);
+				break;
+			case 3:
+				datetime.setMinutes(datetime.getMinutes() + interval);
+				break;			
+			default: 
+				interval = 0;		
+				break;
 		}
-	};
+		
+		display(datetime);		
+	}, 200);
+		
+	
+	/* 模式切換 */
+	$("root").style.cursor = 'pointer';
+	$("root").onclick = function() { mode = (mode + 1) % 4 };
 };
 
 	

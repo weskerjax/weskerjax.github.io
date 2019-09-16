@@ -31,7 +31,7 @@ function patchZodiacAngle(angle, point){
 }
 
 /* 設定月相 */
-function setMoonPhase(angle){
+function setMoonPhase(angle, moonPatch){
 	var moon = $('moon');
 	var bbox = moon.getBBox();
 
@@ -40,7 +40,6 @@ function setMoonPhase(angle){
 		maskPath = $create('path');		
 		maskPath.id = 'moon_mask_path'; 
 		maskPath.setAttribute('fill','white');
-		maskPath.setAttribute('transform','rotate('+[30, bbox.x + bbox.width / 2,  bbox.y + bbox.height / 2]+')');	
 		
 		var mask = $create('mask');
 		mask.id = 'moon_mask'; 
@@ -65,6 +64,7 @@ function setMoonPhase(angle){
 		'c'+[-left, 0], [-left, -bbox.width], [0, -bbox.width],
 		'z'
 	].join(' '));
+	maskPath.setAttribute('transform','rotate('+[moonPatch, bbox.x + bbox.width / 2,  bbox.y + bbox.height / 2]+')');		
 }
 
 
@@ -96,13 +96,18 @@ function display(datetime){
 	/* 月亮指針角度 */
 	var moonPointAngle = ((timeStamp - moonStart) / moonDivisor * 360) % 360; 
 	$("moon_point").setAttribute('transform', 'rotate('+[-moonPointAngle, center.x, center.y]+')');
-	setMoonPhase(moonPointAngle);
 	
 	/* 月亮角度 */
-	var moonAngle = patchZodiacAngle(zodiacAngle + moonPointAngle, $("moon").getBBox());
+	var moonZodiacAngle = zodiacAngle + moonPointAngle;
+	var moonAngle = patchZodiacAngle(moonZodiacAngle, $("moon").getBBox());
 	$("moon").setAttribute('transform', 'rotate('+[-moonAngle, zodiacCenter.x, zodiacCenter.y]+')');
 	$("moon").setAttribute('title', (moonPointAngle * moonCycle / 360).toFixed(1));
 
+
+	/* 設定月相 */
+    var moonPatch = moonAngle - moonZodiacAngle;
+	setMoonPhase(moonPointAngle, moonPatch);
+	
 	
 	/* 分鐘盤 */
 	var minuteRate =  (datetime.getMinutes() + datetime.getSeconds() / 60) / 60; 
@@ -120,13 +125,14 @@ window.onload = function(today){
 	/* 定時重新載入畫面 */
 	setTimeout(function(){ location.reload(); }, 3600 * 1000);
 
-	var mode = 0;
-	var interval = 0;
 	display(new Date());
 	
+	var mode = 0;
+	var interval = 0;
 	setInterval(function() {
 		var datetime = new Date();
 		
+		/* 根據模式產生動畫效果 */		
 		switch(mode){
 			case 1:
 				interval += 10; 

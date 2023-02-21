@@ -633,13 +633,43 @@ D.S.B.Php.Aliases	= ['php'];
 
 
 
+/**=[ Python ]====================================================================================*/
+D.S.B.Py = function(){
+    var funcs	=	'[A-Z][a-z]+';
+
+	var keywords =	'def boolean break byte case catch char class const continue debugger ' +
+					'default delete do double else enum export extends false final finally float ' +
+					'for function goto if implements import in instanceof int interface let long native ' +
+					'new null package private protected public return short static super switch ' +
+					'synchronized this throw throws transient true try typeof var void volatile while with';
+
+	this.RL = [
+		{ r: D.S.R.SLCC,	c: 'comment' },
+		{ r: D.S.R.MLCC,	c: 'comments' },
+		{ r: D.S.R.DQS,		c: 'string' },
+		{ r: D.S.R.SQS,		c: 'string' },
+		{ r: new RegExp('^\\s*#.*', 'gm'),			c: 'preprocessor' },
+		{ r: new RegExp(this.KW(keywords), 'gm'),	c: 'keyword' },
+		{ r: new RegExp(this.KW(funcs), 'gm'),		c: 'func' }
+		];
+
+	this.CssClass = 'dp-js';
+};
+
+D.S.B.Py.prototype	= new D.S.H();
+D.S.B.Py.Aliases	= ['py'];
+
+
+
+
+
 /**=[ JavaScript ]====================================================================================*/
 D.S.B.JScript = function(){
     var funcs	=	'[A-Z][a-z]+';
 
 	var keywords =	'abstract boolean break byte case catch char class const continue debugger ' +
 					'default delete do double else enum export extends false final finally float ' +
-					'for function goto if implements import in instanceof int interface long native ' +
+					'for function goto if implements import in instanceof int interface let long native ' +
 					'new null package private protected public return short static super switch ' +
 					'synchronized this throw throws transient true try typeof var void volatile while with';
 

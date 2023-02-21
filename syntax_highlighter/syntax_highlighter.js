@@ -637,14 +637,14 @@ D.S.B.Php.Aliases	= ['php'];
 D.S.B.Py = function(){
     var funcs	=	'[A-Z][a-z]+';
 
-	var keywords =	'def boolean break byte case catch char class const continue debugger ' +
-					'default delete do double else enum export extends false final finally float ' +
-					'for function goto if implements import in instanceof int interface let long native ' +
-					'new null package private protected public return short static super switch ' +
+	var keywords =	'as boolean break byte case catch char class const continue debugger ' +
+					'def default delete do double else enum export extends from false final finally float ' +
+					'for function goto if implements import in instanceof int interface is let long native ' +
+					'new not null package private protected public raise return short static super switch ' +
 					'synchronized this throw throws transient true try typeof var void volatile while with';
 
 	this.RL = [
-		{ r: D.S.R.SLCC,	c: 'comment' },
+		{ r: new RegExp('#(.*)$', 'gm'),		c: 'comment' },
 		{ r: D.S.R.MLCC,	c: 'comments' },
 		{ r: D.S.R.DQS,		c: 'string' },
 		{ r: D.S.R.SQS,		c: 'string' },

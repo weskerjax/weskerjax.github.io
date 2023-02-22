@@ -422,8 +422,8 @@ D.S.H.prototype.Highlight = function(code){
 	this.div.appendChild(this.ol);
 };
 
-D.S.H.prototype.KW = function(str){
-	return '\\b' + str.replace(new RegExp(' ','g'), '\\b|\\b') + '\\b';
+D.S.H.prototype.KW = function (str, mod) {
+	return new RegExp('\\b' + str.replace(/ /g, '\\b|\\b') + '\\b', mod);
 };
 
 D.S.BloggerMode = function(){
@@ -571,11 +571,11 @@ D.S.B.Sql = function(){
 	this.RL = [
 		{ r: D.S.R.DQS,					c: 'string' },
 		{ r: D.S.R.SQS,					c: 'string' },
-		{ r: new RegExp('--(.*)$', 'gm'),          c: 'comments' },
-		{ r: new RegExp(this.KW(funcs), 'gm'),	   c: 'func' },
-		{ r: new RegExp(this.KW(operators), 'gm'), c: 'op' },
-		{ r: new RegExp(this.KW(keywords), 'gm'),  c: 'keyword' },
-		{ r: new RegExp(this.KW(datatype), 'gm'),  c: 'datatype' }
+		{ r: /--(.*)$/gm,          c: 'comments' },
+		{ r: this.KW(funcs, 'gm'),	   c: 'func' },
+		{ r: this.KW(operators, 'gm'), c: 'op' },
+		{ r: this.KW(keywords, 'gm'),  c: 'keyword' },
+		{ r: this.KW(datatype, 'gm'),  c: 'datatype' }
 		];
 
 	this.CssClass = 'dp-sql';
@@ -619,10 +619,10 @@ D.S.B.Php = function(){
 		{ r: D.S.R.MLCC,	c: 'comments' },
 		{ r: D.S.R.XDQS,	c: 'string' },
 		{ r: D.S.R.SQS,	    c: 'string' },
-		{ r: new RegExp('(\&lt;|<)[?]php|[?](\&gt;|>)', 'gm'),	c: 'tag' },// php tag
-		{ r: new RegExp('\\$\\w+', 'g'),			c: 'vars' },
-		{ r: new RegExp(this.KW(funcs), 'gmi'),		c: 'func' },
-		{ r: new RegExp(this.KW(keywords), 'gm'),	c: 'keyword' }
+		{ r: /(\&lt;|<)[?]php|[?](\&gt;|>)/gm,	c: 'tag' },// php tag
+		{ r: /\\$\\w+/g,			c: 'vars' },
+		{ r: this.KW(funcs, 'gmi'),		c: 'func' },
+		{ r: this.KW(keywords, 'gm'),	c: 'keyword' }
 		];
 
 	this.CssClass = 'dp-php';
@@ -633,24 +633,22 @@ D.S.B.Php.Aliases	= ['php'];
 
 
 
+
+
+
 /**=[ Python ]====================================================================================*/
 D.S.B.Py = function(){
     var funcs	=	'[A-Z][a-z]+';
-
-	var keywords =	'as boolean break byte case catch char class const continue debugger ' +
-					'def default delete do double else enum export extends from false final finally float ' +
-					'for function goto if implements import in instanceof int interface is let long native ' +
-					'new not null package private protected public raise return short static super switch ' +
-					'synchronized this throw throws transient true try typeof var void volatile while with';
-
+	var keywords =	'and assert break class continue def del elif else except exec ' +
+					'finally for from global if import in is lambda not or object pass print ' +
+					'raise return try yield while';
+					 
 	this.RL = [
-		{ r: new RegExp('#(.*)$', 'gm'),		c: 'comment' },
-		{ r: D.S.R.MLCC,	c: 'comments' },
+		{ r: /#.*$/gm,		c: 'comment' },	
 		{ r: D.S.R.DQS,		c: 'string' },
 		{ r: D.S.R.SQS,		c: 'string' },
-		{ r: new RegExp('^\\s*#.*', 'gm'),			c: 'preprocessor' },
-		{ r: new RegExp(this.KW(keywords), 'gm'),	c: 'keyword' },
-		{ r: new RegExp(this.KW(funcs), 'gm'),		c: 'func' }
+		{ r: this.KW(keywords, 'gm'),	c: 'keyword' },
+		{ r: this.KW(funcs, 'gm'),		c: 'func' }
 		];
 
 	this.CssClass = 'dp-js';
@@ -678,9 +676,9 @@ D.S.B.JScript = function(){
 		{ r: D.S.R.MLCC,	c: 'comments' },
 		{ r: D.S.R.DQS,		c: 'string' },
 		{ r: D.S.R.SQS,		c: 'string' },
-		{ r: new RegExp('^\\s*#.*', 'gm'),			c: 'preprocessor' },
-		{ r: new RegExp(this.KW(keywords), 'gm'),	c: 'keyword' },
-		{ r: new RegExp(this.KW(funcs), 'gm'),		c: 'func' }
+		{ r: /^\\s*#.*/gm,			c: 'preprocessor' },
+		{ r: this.KW(keywords, 'gm'),	c: 'keyword' },
+		{ r: this.KW(funcs, 'gm'),		c: 'func' }
 		];
 
 	this.CssClass = 'dp-js';
@@ -710,7 +708,7 @@ D.S.B.Java = function(){
 		{ r: /(?!\@interface\b)\@[\$\w]+\b/g,		c: 'preprocessor' },
 		{ r: /\@interface\b/g,						c: 'preprocessor' },
 		{ r: /\b[A-Z]\w+\b/g,						c: 'func' },
-		{ r: new RegExp(this.KW(keywords), 'gm'),	c: 'keyword' },
+		{ r: this.KW(keywords, 'gm'),	c: 'keyword' },
 	];
 
 	this.CssClass = 'dp-java';
@@ -773,12 +771,12 @@ D.S.B.Asp = function(){
 					'variant while with';
 
 	this.RL = [
-		{ r: new RegExp('^[ ]*\'(.*)$', 'gm'),	c: 'comments' },
-		{ r: D.S.R.DQS,					        c: 'string' },
-		{ r: D.S.R.SQS,					        c: 'string' },
-		{ r: new RegExp(this.KW(funcs), 'igm'),	c: 'func' },
-		{ r: new RegExp('(\&lt;|<)[%]|[%](\&gt;|>)', 'gm'),	c: 'tag' },
-		{ r: new RegExp(this.KW(keywords), 'igm'),		c: 'keyword' }
+		{ r: /^[ ]*\'(.*)$/gm,			c: 'comments' },
+		{ r: D.S.R.DQS,					c: 'string' },
+		{ r: D.S.R.SQS,					c: 'string' },
+		{ r: this.KW(funcs, 'igm'),		c: 'func' },
+		{ r: this.KW(keywords, 'igm'),	c: 'keyword' },
+		{ r: /(\&lt;|<)[%]|[%](\&gt;|>)/gm,	c: 'tag' }
 	];
 
 	this.CssClass = 'dp-asp';
@@ -804,13 +802,13 @@ D.S.B.CSharp=function(){
 						'short sizeof stackalloc static string struct switch this throw true try '+
 						'typeof uint ulong unchecked unsafe ushort using virtual void while';
 	this.RL = [
-		{ r: D.S.R.SLCC,    						c: 'comment' },
-		{ r: D.S.R.MLCC,							c: 'comments' },
-		{ r: D.S.R.DQS,								c: 'string' },
-		{ r: D.S.R.SQS,								c: 'string' },
-		{ r: new RegExp(this.KW(objClass), 'gm'),	c: 'func' },
-		{ r: new RegExp('^\\s*#.*','gm'),			c: 'preprocessor' },
-		{ r: new RegExp(this.KW(keywords),'gm'),	c: 'keyword'}
+		{ r: D.S.R.SLCC,    				c: 'comment' },
+		{ r: D.S.R.MLCC,					c: 'comments' },
+		{ r: D.S.R.DQS,						c: 'string' },
+		{ r: D.S.R.SQS,						c: 'string' },
+		{ r: this.KW(objClass, 'gm'),		c: 'func' },
+		{ r: this.KW(keywords,'gm'),		c: 'keyword'},
+		{ r: /^\\s*#.*/gm,					c: 'preprocessor' }
 	];
 	
 	this.CssClass='dp-cpp';
@@ -827,12 +825,12 @@ D.S.B.Config = function(){
 	var keywords =	'for in do done exit export';
 
 	this.RL = [
-		{ r: new RegExp('(\&gt;|>)', 'gm'),			c: 'gt' },
-		{ r: new RegExp('\[#;](.*)$', 'gm'),		c: 'comments' },
-		{ r: new RegExp('^[a-z]+[a-z_\.]* ', 'gmi'),c: 'keyword' },
-		{ r: new RegExp('^[ ]*[a-z_]+[ ]*=', 'gmi'),c: 'value' },
-		{ r: D.S.R.DQS,					            c: 'string' },
-		{ r: D.S.R.SQS,					            c: 'string' }
+		{ r: /(\&gt;|>)/gm,			c: 'gt' },
+		{ r: /\[#;](.*)$/gm,		c: 'comments' },
+		{ r: /^[a-z]+[a-z_\.]* /gmi,c: 'keyword' },
+		{ r: /^[ ]*[a-z_]+[ ]*=/gmi,c: 'value' },
+		{ r: D.S.R.DQS,				c: 'string' },
+		{ r: D.S.R.SQS,				c: 'string' }
 	];
 
 	this.CssClass = 'dp-cfg';
@@ -851,13 +849,13 @@ D.S.B.Bash = function(){
 
 
 	this.RL = [
-		{ r: new RegExp('^[ \t]*\#(.*)$', 'gm'),	c: 'comments' },
-		{ r: new RegExp('[a-z_]+=', 'gmi'),	    c: 'func' },
-		{ r: new RegExp('\$[a-z_]+', 'gmi'),	c: 'value' },
-		{ r: D.S.R.DQS,	                        c: 'string' },
-		{ r: D.S.R.SQS,	                        c: 'string' },
-		{ r: new RegExp(this.KW(keywords),'gm'),c: 'keyword' }
-		];
+		{ r: /^[ \t]*\#(.*)$/gm,c: 'comments' },
+		{ r: /[a-z_]+=/gmi,	    c: 'func' },
+		{ r: /\$[a-z_]+/gmi,	c: 'value' },
+		{ r: D.S.R.DQS,	        c: 'string' },
+		{ r: D.S.R.SQS,	        c: 'string' },
+		{ r: this.KW(keywords,'gm'),c: 'keyword' }
+	];
 
 	this.CssClass = 'dp-bash';
 };
@@ -937,10 +935,10 @@ D.S.B.Cpp = function(){
 		{ r: D.S.R.MLCC,	c: 'comments' },
 		{ r: D.S.R.DQS,		c: 'string' },
 		{ r: D.S.R.SQS,		c: 'string' },
-		{ r: new RegExp('^ *#\\w*', 'gm'),			c: 'keyword' },
-		{ r: new RegExp(this.KW(funcs), 'gm'),		c: 'func' },
-		{ r: new RegExp(this.KW(datatypes),'gm'),   c: 'datatypes' },
-		{ r: new RegExp(this.KW(keywords), 'gm'),   c: 'keyword' }
+		{ r: /^ *#\\w*/gm,	c: 'keyword' },
+		{ r: this.KW(funcs, 'gm'),		c: 'func' },
+		{ r: this.KW(datatypes,'gm'),   c: 'datatypes' },
+		{ r: this.KW(keywords, 'gm'),   c: 'keyword' }
 		];
 
 	this.CssClass = 'dp-cpp';

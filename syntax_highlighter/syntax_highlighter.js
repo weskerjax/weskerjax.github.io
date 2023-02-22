@@ -647,11 +647,12 @@ D.S.B.Py = function(){
 		{ r: /#.*$/gm,		c: 'comment' },	
 		{ r: D.S.R.DQS,		c: 'string' },
 		{ r: D.S.R.SQS,		c: 'string' },
+		
 		{ r: this.KW(keywords, 'gm'),	c: 'keyword' },
 		{ r: this.KW(funcs, 'gm'),		c: 'func' }
 		];
 
-	this.CssClass = 'dp-js';
+	this.CssClass = 'dp-py';
 };
 
 D.S.B.Py.prototype	= new D.S.H();

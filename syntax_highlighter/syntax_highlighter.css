@@ -9,7 +9,7 @@
 	width: 100%;
 	overflow: auto;
 	margin: 4px 0 4px 0 !important;
-	padding: 1px 0; /* adds a little border on top when controls are hidden */
+	padding: 0; /* adds a little border on top when controls are hidden */
     border:1px solid #333;
 }
 
@@ -30,9 +30,14 @@
 	margin: 0;
 }
 
-.dp-highlighter .bar{
-	padding-left: 45px;
+.dp-highlighter .bar {
+	float: right;
+	visibility: hidden;
 }
+.dp-highlighter:hover .bar {
+	visibility: visible;
+}
+
 
 .dp-highlighter.collapsed .bar,
 .dp-highlighter.nogutter .bar{
@@ -113,12 +118,10 @@
 
 /* Styles for the tools */
 .dp-highlighter .tools{
-	padding: 3px 8px 3px 10px;
+	padding: 3px;
 	font: 9px Verdana, Geneva, Arial, Helvetica, sans-serif;
 	color: silver;
-	background-color: #f8f8f8;
-	padding-bottom: 10px;
-	border-left: 3px solid #6CE26C;
+	background-color: #333; 
 }
 .dp-highlighter.nogutter .tools{
 	border-left: 0;

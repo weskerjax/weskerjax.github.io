@@ -39,7 +39,6 @@
 }
 
 
-.dp-highlighter.collapsed .bar,
 .dp-highlighter.nogutter .bar{
 	padding-left: 0px;
 }
@@ -58,8 +57,7 @@
 	margin-left: 0px !important;
 }
 
-.dp-highlighter ol li,
-.dp-highlighter .columns div{
+.dp-highlighter ol li {
 	list-style: decimal-leading-zero; /* better look for others, override cascade from OL */
 	list-style-position: outside !important;
 	border-left: 3px solid #6CE26C;
@@ -70,23 +68,10 @@
 	line-height: 14px;
 }
 
-.dp-highlighter.nogutter ol li,
-.dp-highlighter.nogutter .columns div{
+.dp-highlighter.nogutter ol li {
 	border: 0;
 }
-
-.dp-highlighter .columns{
-	background-color: #F8F8F8;
-	color: gray;
-	overflow: hidden;
-	width: 100%;
-}
-
-.dp-highlighter .columns div{
-	padding-bottom: 5px;
-}
-
-.dp-highlighter ol li.alt{
+.dp-highlighter ol li:nth-of-type(odd) {
 	background-color: #FFF;
 	color: inherit;
 }
@@ -96,14 +81,6 @@
 	background-color: inherit;
 }
 
-/* Adjust some properties when collapsed */
-.dp-highlighter.collapsed ol{
-	margin: 0px;
-}
-
-.dp-highlighter.collapsed ol li{
-	display: none;
-}
 
 /* Additional modifications when in print-view */
 .dp-highlighter.printing{
@@ -126,9 +103,6 @@
 .dp-highlighter.nogutter .tools{
 	border-left: 0;
 }
-.dp-highlighter.collapsed .tools{
-	border-bottom: 0;
-}
 .dp-highlighter .tools a{
 	font-size: 9px;
 	color: #a0a0a0;
@@ -142,15 +116,6 @@
 	text-decoration: underline;
 }
 
-/* About dialog styles */
-.dp-about { background-color: #fff; color: #333; margin: 0px; padding: 0px; }
-.dp-about table { width: 100%; height: 100%; font-size: 11px; font-family: Tahoma, Verdana, Arial, sans-serif !important; }
-.dp-about td { padding: 10px; vertical-align: top; }
-.dp-about .copy { border-bottom: 1px solid #ACA899; height: 95%; }
-.dp-about .title { color: red; background-color: inherit; font-weight: bold; }
-.dp-about .para { margin: 0 0 4px 0; }
-.dp-about .footer { background-color: #ECEADB; color: #333; border-top: 1px solid #fff; text-align: right; }
-.dp-about .close { font-size: 11px; font-family: Tahoma, Verdana, Arial, sans-serif !important; background-color: #ECEADB; color: #333; width: 60px; height: 22px; }
 
 /* Language specific styles */
 .dp-highlighter .comment { color: #FF8040; background-color: inherit; }

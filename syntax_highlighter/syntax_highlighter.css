@@ -38,7 +38,7 @@
 .dp-highlighter ol {
 	list-style: decimal; /* for ie */
 	background: #fff;
-	margin: 0px 0px 1px 45px !important; /* 1px bottom margin seems to fix occasional Firefox scrolling */
+	margin: 0px 0px 1px 40px !important; /* 1px bottom margin seems to fix occasional Firefox scrolling */
 	color: #5C5C5C;
 }
 .dp-highlighter li {
@@ -46,7 +46,8 @@
 	list-style-position: outside !important;
 	background: #F8F8F8;
 	color: #5C5C5C;
-	padding: 0 3px 0 10px !important;
+	padding: 0 3px 0 5px !important;
+	margin: 0 !important;
 	line-height: 14px;
 }
 .dp-highlighter span {

@@ -1,6 +1,5 @@
 ﻿.dp-highlighter{
-	font-size: 12px;
-	font-family: monospace;
+	font: 12px monospace;
 	width: 100%;
 	overflow: auto;
 	margin: 4px 0 4px 0 !important;
@@ -8,15 +7,6 @@
 	background: #E7E5DC;
     border:1px solid #333;
 	border-radius: 5px;
-}
-
-/* clear styles */
-.dp-highlighter ol,
-.dp-highlighter li,
-.dp-highlighter span {
-	margin: 0;
-	padding: 0;
-	border: none;
 }
 
 .dp-highlighter a,
@@ -27,19 +17,11 @@
 	margin: 0;
 }
 
-.dp-highlighter .bar {
-	float: right;
-	visibility: hidden;
-}
-.dp-highlighter:hover .bar {
-	visibility: visible;
-} 
-
 .dp-highlighter ol {
 	list-style: decimal; /* for ie */
-	background: #fff;
 	margin: 0px 0px 1px 40px !important; /* 1px bottom margin seems to fix occasional Firefox scrolling */
-	color: #5C5C5C;
+	padding: 0;
+	border: none;
 }
 .dp-highlighter li {
 	list-style: decimal-leading-zero; /* better look for others, override cascade from OL */
@@ -52,6 +34,8 @@
 }
 .dp-highlighter span {
 	color: black;
+	margin: 0;
+	padding: 0;
 }
 
 .dp-highlighter.nogutter ol,
@@ -61,19 +45,22 @@
 } 
 
 
-
-/* Styles for the tools */
-.dp-highlighter .tools {
+.dp-highlighter .bar {
 	padding: 0 3px;
 	background: #333;
+	float: right;
+	visibility: hidden;
 }
-.dp-highlighter .tools a {
+.dp-highlighter:hover .bar {
+	visibility: visible;
+} 
+.dp-highlighter .bar a {
 	font: 9px Verdana, Geneva, Arial, Helvetica, sans-serif;
 	color: #aaa;
 	margin: 0 10px;
 	text-decoration: none;
 }
-.dp-highlighter .tools a:hover{
+.dp-highlighter .bar a:hover {
 	color: red;
 }
 

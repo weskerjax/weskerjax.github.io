@@ -5,10 +5,8 @@
 		return el;
 	};
 
-	function $toolbar(h) {
-		var div = $e('div', { className: 'tools' });
-
-		div.appendChild($e('a', {
+	function addCtrl(h) {
+		h.bar.appendChild($e('a', {
 			innerHTML: '原始碼',
 			href: '#',
 			onclick: function () {
@@ -20,7 +18,6 @@
 				return false;
 			}
 		}));
-		return div;
 	};
 
 	function normalize(code) {
@@ -54,16 +51,7 @@
 		return tmp;
 	};
 
-
-	/* Match object */
-	function Match(value, index, css) {
-		this.value = value;
-		this.index = index;
-		this.length = value.length;
-		this.css = css;
-	}
-
-
+	 
 	/**#############################################################################*/
 
 	var B = {}; /*Brushes*/
@@ -84,8 +72,6 @@
 			sunclass.prototype = new B.none();
 			return sunclass;
 		}
-		this.addControls = true;
-		this.noGutter = false;
 	};
 
 	B.none.prototype.addBit = function (str, css) {
@@ -112,44 +98,53 @@
 		}
 	};
 
+	B.none.prototype.addMatch = function (str, idx, css) {
+		this.mes.push({
+			str: str,
+			idx: idx,
+			len: str.length,
+			css: css
+		});
+	};
+
 	B.none.prototype.matchCode = function (r, css) {
 		var m = null;
 		while (m = r.exec(this.code)) {
-			this.mes.push(new Match(m[0], m.index, css));
+			this.addMatch(m[0], m.index, css);
 		}
 	};
 
 	B.none.prototype.execRegexList = function () {
 		if (!Array.isArray(this.RL)) { return }
 
-		for (var i = 0; i < this.RL.length; i++) {
-			this.matchCode(this.RL[i].r, this.RL[i].c);
-		}
+		var i = this.RL.length;
+		while (i--) { this.matchCode(this.RL[i].r, this.RL[i].c); }
 	};
 
-	B.none.prototype.highlight = function (code) {
-		this.code = normalize(code || '');
+	B.none.prototype.highlight = function (el, op) {
+		this.source = el;
+		this.code = normalize(el.innerHTML);
 
-		this.div = $e('div', { className: 'dp-highlighter', h: this });
+		this.div = $e('div', { className: 'dp-highlighter' });
 		this.bar = $e('div', { className: 'bar' });
-		this.ol = $e('ol', { className: this.CssClass });
+		this.ol = $e('ol', { className: 'dp-' + op[0] });
 
-		if (this.noGutter) { this.div.className += ' nogutter'; }
-		if (this.addControls) { this.bar.appendChild($toolbar(this)); }
+		if (op.includes('nogutter')) { this.div.className += ' nogutter'; }
+		if (!op.includes('nocontrols')) { addCtrl(this); }
 
 		this.mes = [];
 		this.execRegexList();
 
 		/* 排序匹配項 */
 		this.mes.sort(function (a, b) {
-			return (a.index - b.index) || (b.length - a.length); /* index ASC, length DESC */
+			return (a.idx - b.idx) || (b.len - a.len); /* idx ASC, len DESC */
 		});
 
 		/* 去除重疊 */
 		for (var i = this.mes.length - 1; i > 0; i--) {
 			for (var j = i - 1; j >= 0; j--) {
-				var end = this.mes[j].index + this.mes[j].length;
-				if (this.mes[i].index < end) { this.mes[i] = null; break; }
+				var end = this.mes[j].idx + this.mes[j].len;
+				if (this.mes[i].idx < end) { this.mes[i] = null; break; }
 			}
 		}
 
@@ -159,16 +154,19 @@
 			var m = this.mes[i];
 			if (!m) { continue; }
 
-			this.addBit(this.code.substring(pos, m.index), '');
-			this.addBit(m.value, m.css);
+			this.addBit(this.code.substring(pos, m.idx), '');
+			this.addBit(m.str, m.css);
 
-			pos = m.index + m.length;
+			pos = m.idx + m.len;
 		}
 
 		this.addBit(this.code.substr(pos), '');
 		this.toLi();
 		this.div.appendChild(this.bar);
 		this.div.appendChild(this.ol);
+
+		el.style.display = 'none';
+		el.parentNode.insertBefore(this.div, el);
 	};
 
 
@@ -196,11 +194,11 @@
 		this.RL = [
 			{ r: DQS, c: 'string' },
 			{ r: SQS, c: 'string' },
-			{ r: /--(.*)$/gm, c: 'comments' },
 			{ r: kw(funcs, 'gm'), c: 'func' },
 			{ r: kw(operators, 'gm'), c: 'op' },
 			{ r: kw(keywords, 'gm'), c: 'keyword' },
-			{ r: kw(datatype, 'gm'), c: 'datatype' }
+			{ r: kw(datatype, 'gm'), c: 'datatype' },
+			{ r: /--(.*)$/gm, c: 'comments' }
 		];		
 	});
 
@@ -240,10 +238,10 @@
 			{ r: MLCC, c: 'comments' },
 			{ r: XDQS, c: 'string' },
 			{ r: SQS, c: 'string' },
-			{ r: /(\&lt;|<)[?]php|[?](\&gt;|>)/gm, c: 'tag' },// php tag
-			{ r: /\\$\\w+/g, c: 'vars' },
 			{ r: kw(funcs, 'gmi'), c: 'func' },
-			{ r: kw(keywords, 'gm'), c: 'keyword' }
+			{ r: kw(keywords, 'gm'), c: 'keyword' },
+			{ r: /(\&lt;|<)[?]php|[?](\&gt;|>)/gm, c: 'tag' },
+			{ r: /\\$\\w+/g, c: 'vars' },
 		];
 	});
 
@@ -258,9 +256,9 @@
 		this.RL = [
 			{ r: DQS, c: 'string' },
 			{ r: SQS, c: 'string' },
+			{ r: kw(keywords, 'gm'), c: 'keyword' },
 			{ r: /#.*$/gm, c: 'comment' },
-			{ r: /[A-Z][a-z]+/gm, c: 'func' },
-			{ r: kw(keywords, 'gm'), c: 'keyword' }
+			{ r: /\b[A-Z][A-Za-z]+/gm, c: 'func' }
 		];
 	});
 
@@ -279,9 +277,9 @@
 			{ r: MLCC, c: 'comments' },
 			{ r: DQS, c: 'string' },
 			{ r: SQS, c: 'string' },
-			{ r: /^\\s*#.*/gm, c: 'preprocessor' },
-			{ r: /[A-Z][a-z]+/gm, c: 'func' },
 			{ r: kw(keywords, 'gm'), c: 'keyword' },
+			{ r: /^\\s*#.*/gm, c: 'preprocessor' },
+			{ r: /\b[A-Z][A-Za-z]+/gm, c: 'func' },
 		];
 	});
 
@@ -302,11 +300,11 @@
 			{ r: MLCC, c: 'comments' },
 			{ r: DQS, c: 'string' },
 			{ r: SQS, c: 'string' },
+			{ r: kw(keywords, 'gm'), c: 'keyword' },
 			{ r: /\b([\d]+(\.[\d]+)?|0x[a-f0-9]+)\b/gi, c: 'value' },
 			{ r: /(?!\@interface\b)\@[\$\w]+\b/g, c: 'preprocessor' },
 			{ r: /\@interface\b/g, c: 'preprocessor' },
-			{ r: /\b[A-Z]\w+\b/g, c: 'func' },
-			{ r: kw(keywords, 'gm'), c: 'keyword' },
+			{ r: /\b[A-Z]\w+\b/g, c: 'func' }
 		];
 	});
 
@@ -325,8 +323,8 @@
 			// Match attributes and their values
 			r = new RegExp('([:\\w-\.]+)\\s*=\\s*(".*?"|\'.*?\'|\\w+)*|(\\w+)', 'gm');
 			while (m = r.exec(this.code)) {
-				if (m[1]) { this.mes.push(new Match(m[1], m.index, 'attribute')); }
-				if (m[2]) { this.mes.push(new Match(m[2], m.index + m[0].indexOf(m[2]), 'attribute-value')); }
+				if (m[1]) { this.addMatch(m[1], m.index, 'attribute'); }
+				if (m[2]) { this.addMatch(m[2], m.index + m[0].indexOf(m[2]), 'attribute-value'); }
 			}
 
 			// Match opening and closing tag brackets
@@ -335,7 +333,7 @@
 			// Match tag names
 			r = new RegExp('(?:\&lt;|<)/*\\?*\\s*([:\\w-\.]+)', 'gm');
 			while (m = r.exec(this.code)) {
-				this.mes.push(new Match(m[1], m.index + m[0].indexOf(m[1]), 'tag-name'));
+				this.addMatch(m[1], m.index + m[0].indexOf(m[1]), 'tag-name');
 			}
 		};
 	});
@@ -417,12 +415,12 @@
 			'rm sfdisk sleep sudo tar then tr wget while';
 
 		this.RL = [
+			{ r: DQS, c: 'string' },
+			{ r: SQS, c: 'string' },
+			{ r: kw(keywords, 'gm'), c: 'keyword' },
 			{ r: /^[ \t]*\#(.*)$/gm, c: 'comments' },
 			{ r: /[a-z_]+=/gmi, c: 'func' },
 			{ r: /\$[a-z_]+/gmi, c: 'value' },
-			{ r: DQS, c: 'string' },
-			{ r: SQS, c: 'string' },
-			{ r: kw(keywords, 'gm'), c: 'keyword' }
 		];
 	});
 
@@ -441,14 +439,14 @@
 			r2 = new RegExp('([@:\\w-\.]+)\\s*:\\s*([^;\n\(!]+)[;\n\(!]', 'gm');
 			while (m1 = r1.exec(this.code)) {
 				while (m2 = r2.exec(m1[0])) {
-					this.mes.push(new Match(m2[1], m1.index + m2.index, 'func'));
-					this.mes.push(new Match(m2[2], m1.index + m2.index + m2[0].indexOf(m2[2]), 'value'));
+					this.addMatch(m2[1], m1.index + m2.index, 'func');
+					this.addMatch(m2[2], m1.index + m2.index + m2[0].indexOf(m2[2]), 'value');
 				}
 			}
 			/* Match attributes and their values */
-			r1 = new RegExp('^([\\s\\w\.#*:+-]+)[,\{\n]', 'gm'); 
+			r1 = new RegExp('([\\s\\w\.#*:+-]+)[,\{\n]', 'gm'); 
 			while (m1 = r1.exec(this.code)) {
-				this.mes.push(new Match(m1[1], m1.index, 'keyword'));
+				this.addMatch(m1[1], m1.index, 'keyword');
 			}
 		};
 	});
@@ -482,10 +480,10 @@
 			{ r: MLCC, c: 'comments' },
 			{ r: DQS, c: 'string' },
 			{ r: SQS, c: 'string' },
-			{ r: /^ *#\\w*/gm, c: 'keyword' },
 			{ r: kw(funcs, 'gm'), c: 'func' },
 			{ r: kw(datatypes, 'gm'), c: 'datatypes' },
-			{ r: kw(keywords, 'gm'), c: 'keyword' }
+			{ r: kw(keywords, 'gm'), c: 'keyword' },
+			{ r: /^ *#\\w*/gm, c: 'keyword' }
 		];
 	});
 
@@ -497,19 +495,10 @@
 
 	for (var i = 0, l = els.length; i < l; i++) {
 		var el = els[i];
-		var op = el.className.toLowerCase();
-		var lang = op.split(':')[0];
-		if (!B[lang]) { lang = 'none';}
+		var op = el.className.split(':'); /* cfg:nogutter:nocontrols */
+		if (!B[op[0]]) { op[0] = 'none';}
 
-		var h = new B[lang](); /* 加亮物件 */
-		h.CssClass = 'dp-' + lang;
-		h.addControls = !op.includes('nocontrols');
-		h.noGutter = op.includes('nogutter');
-		h.source = el;
-		h.highlight(el.innerHTML);
-
-		el.style.display = 'none';
-		el.parentNode.insertBefore(h.div, el);
+		new B[op[0]]().highlight(el, op); /* 加亮物件 */
 	}
 })();
 
